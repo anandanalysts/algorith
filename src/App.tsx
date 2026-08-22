@@ -42,7 +42,7 @@ import {
 } from 'lucide-react';
 
 import { COMPANY, trackEvent } from './config';
-import { PRODUCTS, INDUSTRIES, INSIGHTS, ProductItem, InsightItem } from './data';
+import { PRODUCTS, INDUSTRIES, INSIGHTS, ECOSYSTEM_GROUPS, SERVICES, SOLUTIONS, ProductItem, InsightItem, ServiceItem, SolutionItem } from './data';
 import { AlgorithLogo, AlgorithLogoIcon } from './components/Logo';
 
 interface ScenarioData {
@@ -538,7 +538,10 @@ export default function App() {
 
         <nav className="flex flex-col gap-3 text-base font-medium">
           <a href="#solutions" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-800/80 hover:text-[#12D9F5] transition-colors">Solutions</a>
+          <a href="#services" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-800/80 hover:text-[#12D9F5] transition-colors">Services</a>
           <a href="#products" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-800/80 hover:text-[#12D9F5] transition-colors">Products</a>
+          <a href="#intelligence" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-800/80 hover:text-[#12D9F5] transition-colors">Intelligence</a>
+          <a href="#vision" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-800/80 hover:text-[#12D9F5] transition-colors">Vision</a>
           <a href="#industries" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-800/80 hover:text-[#12D9F5] transition-colors">Industries</a>
           <a href="#work" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-800/80 hover:text-[#12D9F5] transition-colors">Work</a>
           <a href="#about" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-800/80 hover:text-[#12D9F5] transition-colors">About</a>
@@ -566,7 +569,7 @@ export default function App() {
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-7 text-sm font-medium text-slate-300">
-            {['Solutions', 'Products', 'Industries', 'Work', 'About', 'Insights'].map((item) => (
+            {['Solutions', 'Services', 'Products', 'Intelligence', 'Vision', 'Industries', 'Work', 'About', 'Insights'].map((item) => (
               <a 
                 key={item}
                 href={`#${item.toLowerCase()}`} 
@@ -662,19 +665,19 @@ export default function App() {
                   whileHover={{ scale: 1.04, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                   href="#contact"
-                  onClick={() => trackEvent('hero_lets_build_click')}
+                  onClick={() => trackEvent('hero_talk_click')}
                   className="btn-shimmer inline-flex items-center justify-center gap-2 bg-[#1557E8] hover:bg-[#168CFF] text-white font-semibold px-7 py-3.5 rounded-md shadow-lg shadow-blue-700/30 transition-all text-base"
                 >
-                  Let's Build →
+                  Talk to ALGorith →
                 </motion.a>
                 <motion.a 
                   whileHover={{ scale: 1.04, y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  href="#solutions"
-                  onClick={() => trackEvent('hero_explore_solutions_click')}
+                  href="#products"
+                  onClick={() => trackEvent('hero_explore_products_click')}
                   className="inline-flex items-center justify-center gap-2 bg-[#102544] hover:bg-[#16325B] text-slate-200 border border-slate-700/60 font-semibold px-7 py-3.5 rounded-md hover:border-[#12D9F5] hover:text-[#12D9F5] transition-all text-base"
                 >
-                  Explore Solutions
+                  Explore Products
                 </motion.a>
               </motion.div>
             </div>
@@ -859,11 +862,18 @@ export default function App() {
       {/* Capability Strip */}
       <SectionReveal className="bg-[#0B1930] border-b border-slate-800/80 py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-around items-center flex-wrap gap-6 font-neo text-lg sm:text-xl font-bold tracking-wider text-slate-200">
+          <div className="flex justify-between items-center flex-wrap gap-6 font-neo text-sm sm:text-base font-bold tracking-wide text-slate-200">
             <div className="flex items-center gap-2 hover:text-[#12D9F5] transition-colors cursor-default"><span>⚡</span> AI</div>
+            <span className="text-[#12D9F5]">•</span>
             <div className="flex items-center gap-2 hover:text-[#12D9F5] transition-colors cursor-default"><span>💻</span> SOFTWARE</div>
+            <span className="text-[#12D9F5]">•</span>
             <div className="flex items-center gap-2 hover:text-[#12D9F5] transition-colors cursor-default"><span>📊</span> DATA</div>
+            <span className="text-[#12D9F5]">•</span>
             <div className="flex items-center gap-2 hover:text-[#12D9F5] transition-colors cursor-default"><span>🔄</span> AUTOMATION</div>
+            <span className="text-[#12D9F5]">•</span>
+            <div className="flex items-center gap-2 hover:text-[#12D9F5] transition-colors cursor-default"><span>🏢</span> BUSINESS SYSTEMS</div>
+            <span className="text-[#12D9F5]">•</span>
+            <div className="flex items-center gap-2 hover:text-[#12D9F5] transition-colors cursor-default"><span>🚀</span> DIGITAL TRANSFORMATION</div>
           </div>
         </div>
       </SectionReveal>
@@ -884,143 +894,80 @@ export default function App() {
         </div>
       </div>
 
-      {/* Solutions Section */}
+      {/* Solutions Section (Customer Problem Focused) */}
       <section id="solutions" className="py-24 border-b border-slate-800/80 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionReveal className="text-center max-w-3xl mx-auto mb-16 space-y-3">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#12D9F5]/10 border border-[#12D9F5]/30 text-[#12D9F5] font-['IBM_Plex_Mono'] text-xs font-semibold tracking-wider">
-              SOLUTIONS &amp; CAPABILITIES
+              BUSINESS SOLUTIONS
             </div>
             <h2 className="font-neo text-3xl sm:text-5xl font-bold tracking-tight text-white">
-              TECHNOLOGY BUILT AROUND YOUR BUSINESS
+              WHAT ARE YOU LOOKING TO SOLVE?
             </h2>
             <p className="text-slate-400 text-lg">
-              &ldquo;From intelligent automation to scalable software, ALGorith helps businesses transform complex processes into connected digital systems.&rdquo;
+              &ldquo;Clear technology solutions tailored around your real-world business challenges—no technical jargon required.&rdquo;
             </p>
           </SectionReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            
-            {/* Card 1: ALGorith AI */}
-            <SectionReveal delay={0.1}>
-              <div 
-                onMouseMove={handleSpotlightMouseMove}
-                className="spotlight-card bg-[#0B1930] border border-slate-800 hover:border-[#12D9F5] rounded-xl p-8 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-cyan-500/10 group h-full"
-              >
-                <div className="relative z-10">
-                  <div className="font-['IBM_Plex_Mono'] text-xs text-[#12D9F5] font-semibold mb-4">01 — AI</div>
-                  <div className="w-12 h-12 rounded bg-[#102544] border border-slate-700 flex items-center justify-center text-2xl text-[#12D9F5] mb-5 group-hover:scale-110 group-hover:border-[#12D9F5] transition-all">
-                    🤖
-                  </div>
-                  <h3 className="font-neo text-2xl font-bold text-white mb-2">ALGorith AI</h3>
-                  <p className="text-slate-400 text-sm mb-6">Build intelligent systems that understand, assist and act.</p>
-                  <ul className="space-y-2 border-t border-slate-800/80 pt-4 text-xs text-slate-300 mb-8">
-                    <li className="flex items-center gap-2"><span className="text-[#19DDB5] font-bold">›</span> AI Assistants &amp; Autonomous Agents</li>
-                    <li className="flex items-center gap-2"><span className="text-[#19DDB5] font-bold">›</span> Generative AI &amp; LLM Integration</li>
-                    <li className="flex items-center gap-2"><span className="text-[#19DDB5] font-bold">›</span> RAG / Custom Knowledge Systems</li>
-                    <li className="flex items-center gap-2"><span className="text-[#19DDB5] font-bold">›</span> Intelligent Customer Support Pipelines</li>
-                  </ul>
-                </div>
-                <a 
-                  href="#contact" 
-                  onClick={() => trackEvent('solution_card_cta', { solution: 'ALGorith AI' })}
-                  className="relative z-10 w-full text-center bg-[#102544] hover:bg-[#16325B] hover:text-[#12D9F5] border border-slate-700 hover:border-[#12D9F5] text-xs font-semibold py-2.5 px-4 rounded transition-all"
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {SOLUTIONS.map((sol, idx) => (
+              <SectionReveal key={sol.id} delay={idx * 0.06} className="h-full">
+                <div 
+                  onMouseMove={handleSpotlightMouseMove}
+                  className="spotlight-card bg-[#0B1930] border border-slate-800 hover:border-[#12D9F5] rounded-xl p-7 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-cyan-500/10 group h-full"
                 >
-                  Request AI Scope →
-                </a>
-              </div>
-            </SectionReveal>
+                  <div className="space-y-5 relative z-10">
+                    <div className="flex justify-between items-start">
+                      <div className="w-12 h-12 rounded-lg bg-[#102544] border border-slate-700 flex items-center justify-center text-2xl group-hover:scale-110 group-hover:border-[#12D9F5] transition-all shadow-inner">
+                        {sol.icon}
+                      </div>
+                      <span className="text-[11px] font-['IBM_Plex_Mono'] text-[#12D9F5] font-semibold tracking-wider uppercase bg-[#12D9F5]/10 border border-[#12D9F5]/30 px-2.5 py-1 rounded">
+                        Solution 0{idx + 1}
+                      </span>
+                    </div>
 
-            {/* Card 2: ALGorith Software */}
-            <SectionReveal delay={0.2}>
-              <div 
-                onMouseMove={handleSpotlightMouseMove}
-                className="spotlight-card bg-[#0B1930] border border-slate-800 hover:border-[#12D9F5] rounded-xl p-8 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-cyan-500/10 group h-full"
-              >
-                <div className="relative z-10">
-                  <div className="font-['IBM_Plex_Mono'] text-xs text-[#12D9F5] font-semibold mb-4">02 — SOFTWARE</div>
-                  <div className="w-12 h-12 rounded bg-[#102544] border border-slate-700 flex items-center justify-center text-2xl text-[#12D9F5] mb-5 group-hover:scale-110 group-hover:border-[#12D9F5] transition-all">
-                    💻
+                    <h3 className="font-neo text-2xl font-bold text-white group-hover:text-[#12D9F5] transition-colors">
+                      {sol.title}
+                    </h3>
+
+                    {/* Problem → Approach → Relevant Products */}
+                    <div className="space-y-3.5 pt-2 border-t border-slate-800/80 text-xs font-['IBM_Plex_Mono']">
+                      <div className="bg-[#102544]/60 border-l-2 border-rose-400 p-2.5 rounded-r">
+                        <span className="text-rose-400 font-bold block mb-0.5 uppercase tracking-wider text-[10px]">The Challenge</span>
+                        <p className="text-slate-300 font-sans leading-relaxed text-xs">{sol.problem}</p>
+                      </div>
+
+                      <div className="bg-[#102544]/60 border-l-2 border-cyan-400 p-2.5 rounded-r">
+                        <span className="text-cyan-400 font-bold block mb-0.5 uppercase tracking-wider text-[10px]">ALGorith Approach</span>
+                        <p className="text-slate-300 font-sans leading-relaxed text-xs">{sol.approach}</p>
+                      </div>
+
+                      <div className="pt-1">
+                        <span className="text-[10px] text-slate-400 uppercase tracking-wider block mb-1.5">Relevant Products &amp; Services:</span>
+                        <div className="flex flex-wrap gap-1.5">
+                          {sol.relevantProducts.map((p) => (
+                            <span key={p} className="text-[11px] bg-[#102544] border border-slate-700 text-[#12D9F5] px-2 py-0.5 rounded font-mono">
+                              {p}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <h3 className="font-neo text-2xl font-bold text-white mb-2">ALGorith Software</h3>
-                  <p className="text-slate-400 text-sm mb-6">Build scalable digital products and business software.</p>
-                  <ul className="space-y-2 border-t border-slate-800/80 pt-4 text-xs text-slate-300 mb-8">
-                    <li className="flex items-center gap-2"><span className="text-[#19DDB5] font-bold">›</span> High-Performance Web Applications</li>
-                    <li className="flex items-center gap-2"><span className="text-[#19DDB5] font-bold">›</span> Enterprise SaaS Platforms &amp; Portals</li>
-                    <li className="flex items-center gap-2"><span className="text-[#19DDB5] font-bold">›</span> Robust APIs &amp; Microservices</li>
-                    <li className="flex items-center gap-2"><span className="text-[#19DDB5] font-bold">›</span> Rapid Production-Grade MVP Development</li>
-                  </ul>
-                </div>
-                <a 
-                  href="#contact" 
-                  onClick={() => trackEvent('solution_card_cta', { solution: 'ALGorith Software' })}
-                  className="relative z-10 w-full text-center bg-[#102544] hover:bg-[#16325B] hover:text-[#12D9F5] border border-slate-700 hover:border-[#12D9F5] text-xs font-semibold py-2.5 px-4 rounded transition-all"
-                >
-                  Request Software Scope →
-                </a>
-              </div>
-            </SectionReveal>
 
-            {/* Card 3: ALGorith Data */}
-            <SectionReveal delay={0.3}>
-              <div 
-                onMouseMove={handleSpotlightMouseMove}
-                className="spotlight-card bg-[#0B1930] border border-slate-800 hover:border-[#12D9F5] rounded-xl p-8 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-cyan-500/10 group h-full"
-              >
-                <div className="relative z-10">
-                  <div className="font-['IBM_Plex_Mono'] text-xs text-[#12D9F5] font-semibold mb-4">03 — DATA</div>
-                  <div className="w-12 h-12 rounded bg-[#102544] border border-slate-700 flex items-center justify-center text-2xl text-[#12D9F5] mb-5 group-hover:scale-110 group-hover:border-[#12D9F5] transition-all">
-                    📊
+                  <div className="relative z-10 pt-6 mt-6 border-t border-slate-800/80 flex items-center justify-between">
+                    <span className="text-xs text-slate-400 font-mono">Tailored Implementation</span>
+                    <a 
+                      href="#contact" 
+                      onClick={() => trackEvent('solution_find_click', { solution: sol.title })}
+                      className="btn-shimmer inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded bg-[#1557E8] hover:bg-[#168CFF] text-white shadow-md shadow-blue-700/30 transition-all hover:scale-105"
+                    >
+                      Find Your Solution <ArrowRight className="w-3.5 h-3.5" />
+                    </a>
                   </div>
-                  <h3 className="font-neo text-2xl font-bold text-white mb-2">ALGorith Data</h3>
-                  <p className="text-slate-400 text-sm mb-6">Turn business data into actionable decisions.</p>
-                  <ul className="space-y-2 border-t border-slate-800/80 pt-4 text-xs text-slate-300 mb-8">
-                    <li className="flex items-center gap-2"><span className="text-[#19DDB5] font-bold">›</span> Data Engineering &amp; ETL Pipelines</li>
-                    <li className="flex items-center gap-2"><span className="text-[#19DDB5] font-bold">›</span> Executive KPI Dashboards</li>
-                    <li className="flex items-center gap-2"><span className="text-[#19DDB5] font-bold">›</span> Automated Reporting Infrastructure</li>
-                    <li className="flex items-center gap-2"><span className="text-[#19DDB5] font-bold">›</span> Predictive &amp; BI Analytics</li>
-                  </ul>
                 </div>
-                <a 
-                  href="#contact" 
-                  onClick={() => trackEvent('solution_card_cta', { solution: 'ALGorith Data' })}
-                  className="relative z-10 w-full text-center bg-[#102544] hover:bg-[#16325B] hover:text-[#12D9F5] border border-slate-700 hover:border-[#12D9F5] text-xs font-semibold py-2.5 px-4 rounded transition-all"
-                >
-                  Explore Data Architecture →
-                </a>
-              </div>
-            </SectionReveal>
-
-            {/* Card 4: ALGorith Automation */}
-            <SectionReveal delay={0.4}>
-              <div 
-                onMouseMove={handleSpotlightMouseMove}
-                className="spotlight-card bg-[#0B1930] border border-slate-800 hover:border-[#12D9F5] rounded-xl p-8 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-cyan-500/10 group h-full"
-              >
-                <div className="relative z-10">
-                  <div className="font-['IBM_Plex_Mono'] text-xs text-[#12D9F5] font-semibold mb-4">04 — AUTOMATION</div>
-                  <div className="w-12 h-12 rounded bg-[#102544] border border-slate-700 flex items-center justify-center text-2xl text-[#12D9F5] mb-5 group-hover:scale-110 group-hover:border-[#12D9F5] transition-all">
-                    ⚙️
-                  </div>
-                  <h3 className="font-neo text-2xl font-bold text-white mb-2">ALGorith Automation</h3>
-                  <p className="text-slate-400 text-sm mb-6">Remove repetitive work and connect business processes.</p>
-                  <ul className="space-y-2 border-t border-slate-800/80 pt-4 text-xs text-slate-300 mb-8">
-                    <li className="flex items-center gap-2"><span className="text-[#19DDB5] font-bold">›</span> Cross-System Workflow Automation</li>
-                    <li className="flex items-center gap-2"><span className="text-[#19DDB5] font-bold">›</span> CRM, Lead &amp; Sales Operations</li>
-                    <li className="flex items-center gap-2"><span className="text-[#19DDB5] font-bold">›</span> Intelligent Document Processing</li>
-                    <li className="flex items-center gap-2"><span className="text-[#19DDB5] font-bold">›</span> Automated Communications &amp; Routing</li>
-                  </ul>
-                </div>
-                <a 
-                  href="#contact" 
-                  onClick={() => trackEvent('solution_card_cta', { solution: 'ALGorith Automation' })}
-                  className="relative z-10 w-full text-center bg-[#102544] hover:bg-[#16325B] hover:text-[#12D9F5] border border-slate-700 hover:border-[#12D9F5] text-xs font-semibold py-2.5 px-4 rounded transition-all"
-                >
-                  Build Automation Pipeline →
-                </a>
-              </div>
-            </SectionReveal>
-
+              </SectionReveal>
+            ))}
           </div>
 
           {/* AI Playground: Interactive Demonstration */}
@@ -1342,119 +1289,317 @@ export default function App() {
         </div>
       </section>
 
-      {/* Product Ecosystem (Proprietary R&D) */}
+      {/* Product Ecosystem (ALGorith Ecosystem Groups) */}
       <section id="products" className="py-24 bg-[#0B1930] border-b border-slate-800/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionReveal className="text-center max-w-3xl mx-auto mb-12 space-y-3">
+          <SectionReveal className="text-center max-w-3xl mx-auto mb-16 space-y-3">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#12D9F5]/10 border border-[#12D9F5]/30 text-[#12D9F5] font-['IBM_Plex_Mono'] text-xs font-semibold tracking-wider">
-              PRODUCT ECOSYSTEM
+              ALGORTH ECOSYSTEM &amp; PLATFORM SUITE
             </div>
             <h2 className="font-neo text-3xl sm:text-5xl font-bold tracking-tight text-white">
-              BUILT ONCE. IMPROVED CONTINUOUSLY.
+              COHERENT. INTELLIGENT. SCALABLE.
             </h2>
             <p className="text-slate-400 text-lg">
-              &ldquo;ALGorith Technologies is engineering a cohesive suite of intelligent enterprise digital products.&rdquo;
+              &ldquo;An interconnected ecosystem of business operating systems, autonomous AI agent layers, and continuous learning frameworks.&rdquo;
             </p>
           </SectionReveal>
 
-          {/* Category Filter Pills */}
-          <SectionReveal delay={0.1} className="flex flex-wrap justify-center gap-2 mb-12">
-            {['ALL', 'Platform', 'Automation', 'AI & Data', 'Operations', 'Creative'].map((cat) => (
-              <button
-                key={cat}
-                onClick={() => {
-                  setProductCategory(cat);
-                  trackEvent('product_filter_click', { category: cat });
-                }}
-                className={`px-4 py-1.5 rounded-full text-xs font-['IBM_Plex_Mono'] transition-all ${
-                  productCategory === cat
-                    ? 'bg-[#12D9F5] text-[#061226] font-bold shadow-lg shadow-cyan-500/20 scale-105'
-                    : 'bg-[#102544] text-slate-300 border border-slate-700 hover:border-slate-500'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </SectionReveal>
+          {/* Ecosystem Groups */}
+          <div className="space-y-20">
+            {ECOSYSTEM_GROUPS.map((group, groupIdx) => (
+              <SectionReveal key={group.name} delay={groupIdx * 0.1} className="space-y-8">
+                {/* Group Header Banner */}
+                <div className="border-l-4 border-[#12D9F5] pl-6 py-2 bg-gradient-to-r from-[#102544]/60 to-transparent rounded-r-xl">
+                  <div className="font-['IBM_Plex_Mono'] text-xs font-semibold text-[#12D9F5] uppercase tracking-wider mb-1">
+                    {group.badge}
+                  </div>
+                  <h3 className="font-neo text-2xl sm:text-3xl font-bold text-white mb-2">
+                    {group.name} — <span className="text-slate-300 font-normal text-xl sm:text-2xl">{group.subtitle}</span>
+                  </h3>
+                  <p className="text-slate-400 text-sm max-w-4xl">
+                    {group.description}
+                  </p>
+                </div>
 
-          <motion.div 
-            layout
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            <AnimatePresence>
-              {filteredProducts.map((prod, idx) => (
-                <motion.div 
-                  layout
-                  initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                  transition={{ duration: 0.35, delay: idx * 0.04 }}
-                  key={prod.id}
-                  onMouseMove={handleSpotlightMouseMove}
-                  className="spotlight-card bg-[#061226] border border-slate-800 hover:border-[#12D9F5] rounded-xl p-7 relative transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-cyan-500/10 flex flex-col justify-between group"
-                >
-                  <div className="relative z-10">
-                    <div className="flex justify-between items-start mb-4">
-                      <span className="text-[11px] font-['IBM_Plex_Mono'] text-slate-400 uppercase">
-                        {prod.category}
-                      </span>
-                      <span 
-                        className={`text-[10px] font-['IBM_Plex_Mono'] font-bold px-2.5 py-1 rounded uppercase border ${
-                          prod.status === 'LIVE APP' || prod.status === 'LIVE PREVIEW'
-                            ? 'bg-[#19DDB5]/20 text-[#19DDB5] border-[#19DDB5]/50 flex items-center gap-1.5'
-                            : prod.status === 'IN DEVELOPMENT'
-                            ? 'bg-[#19DDB5]/10 text-[#19DDB5] border-[#19DDB5]/30'
-                            : 'bg-[#12D9F5]/10 text-[#12D9F5] border-[#12D9F5]/30'
+                {/* Group Products Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {group.products.map((prod, prodIdx) => {
+                    const isStrategic = prod.isStrategicFuture;
+                    return (
+                      <motion.div
+                        key={prod.id}
+                        initial={{ opacity: 0, y: 15 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.3, delay: prodIdx * 0.05 }}
+                        onMouseMove={handleSpotlightMouseMove}
+                        className={`spotlight-card rounded-xl p-7 relative transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between group ${
+                          isStrategic
+                            ? 'bg-gradient-to-br from-[#0B2347] via-[#061226] to-[#0A2E46] border-2 border-[#12D9F5]/70 shadow-xl shadow-cyan-500/15 ring-2 ring-[#12D9F5]/20'
+                            : 'bg-[#061226] border border-slate-800 hover:border-[#12D9F5]'
                         }`}
                       >
-                        {prod.status === 'LIVE APP' && <span className="w-1.5 h-1.5 rounded-full bg-[#19DDB5] animate-ping" />}
-                        {prod.status}
+                        {isStrategic && (
+                          <div className="absolute -top-3 right-5 px-3 py-0.5 rounded-full bg-gradient-to-r from-[#12D9F5] to-[#19DDB5] text-[#061226] text-[10px] font-['IBM_Plex_Mono'] font-bold tracking-wider shadow-md uppercase">
+                            Future Strategic Tech
+                          </div>
+                        )}
+
+                        <div className="relative z-10">
+                          <div className="flex justify-between items-start mb-3">
+                            <span className="text-[11px] font-['IBM_Plex_Mono'] text-slate-400 uppercase tracking-wide">
+                              {group.name}
+                            </span>
+                            <span 
+                              className={`text-[10px] font-['IBM_Plex_Mono'] font-bold px-2.5 py-1 rounded uppercase border ${
+                                prod.status === 'LIVE APP'
+                                  ? 'bg-[#19DDB5]/20 text-[#19DDB5] border-[#19DDB5]/50 flex items-center gap-1.5'
+                                  : prod.status === 'IN DEVELOPMENT'
+                                  ? 'bg-[#12D9F5]/10 text-[#12D9F5] border-[#12D9F5]/30'
+                                  : 'bg-amber-500/10 text-amber-300 border-amber-500/30'
+                              }`}
+                            >
+                              {prod.status === 'LIVE APP' && <span className="w-1.5 h-1.5 rounded-full bg-[#19DDB5] animate-ping" />}
+                              {prod.status}
+                            </span>
+                          </div>
+
+                          <h4 className="font-neo text-xl font-bold text-white mb-1 group-hover:text-[#12D9F5] transition-colors">
+                            ALGorith {prod.name}
+                          </h4>
+                          
+                          <div className="text-xs font-['IBM_Plex_Mono'] text-[#12D9F5] mb-3 font-medium">
+                            {prod.valueProp}
+                          </div>
+
+                          <div className="space-y-2 mb-6 border-t border-slate-800/80 pt-3">
+                            <div className="text-[11px] font-['IBM_Plex_Mono'] text-slate-400 uppercase">Primary Use Case:</div>
+                            <p className="text-slate-300 text-xs leading-relaxed">
+                              {prod.primaryUseCase}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="relative z-10 pt-2 border-t border-slate-800/80 flex items-center justify-between gap-3">
+                          {prod.liveUrl ? (
+                            <>
+                              <a
+                                href={prod.liveUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                onClick={() => trackEvent('product_live_link_click', { product: prod.name, url: prod.liveUrl })}
+                                className="btn-shimmer inline-flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded bg-[#1557E8] hover:bg-[#168CFF] text-white shadow-md shadow-blue-700/30 transition-all hover:scale-105"
+                              >
+                                Explore &amp; Launch <ExternalLink className="w-3.5 h-3.5" />
+                              </a>
+                              <a
+                                href="#contact"
+                                onClick={() => trackEvent('product_inquire_click', { product: prod.name })}
+                                className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-400 hover:text-[#12D9F5] transition-colors"
+                              >
+                                Request Demo <ArrowRight className="w-3 h-3" />
+                              </a>
+                            </>
+                          ) : (
+                            <a
+                              href="#contact"
+                              onClick={() => trackEvent('product_inquire_click', { product: prod.name })}
+                              className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#12D9F5] hover:text-white transition-colors group-hover:translate-x-1"
+                            >
+                              Explore Roadmap &amp; Access <ArrowRight className="w-3.5 h-3.5" />
+                            </a>
+                          )}
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </SectionReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Premium Services Section */}
+      <section id="services" className="py-24 bg-[#061226] border-b border-slate-800/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionReveal className="text-center max-w-3xl mx-auto mb-16 space-y-3">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#12D9F5]/10 border border-[#12D9F5]/30 text-[#12D9F5] font-['IBM_Plex_Mono'] text-xs font-semibold tracking-wider">
+              PROFESSIONAL ENGINEERING &amp; ADVISORY
+            </div>
+            <h2 className="font-neo text-3xl sm:text-5xl font-bold tracking-tight text-white">
+              PRAGMATIC SOLUTIONS FOR COMPLEX BUSINESS CHALLENGES
+            </h2>
+            <p className="text-slate-400 text-lg">
+              &ldquo;We translate operational friction into resilient software, automated workflows, and measurable business outcomes.&rdquo;
+            </p>
+          </SectionReveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {SERVICES.map((srv, idx) => (
+              <SectionReveal key={srv.id} delay={idx * 0.08} className="h-full">
+                <div
+                  onMouseMove={handleSpotlightMouseMove}
+                  className="spotlight-card bg-[#0B1930] border border-slate-800 hover:border-[#12D9F5] rounded-xl p-7 relative transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-cyan-500/10 flex flex-col justify-between h-full group"
+                >
+                  <div className="relative z-10 space-y-5">
+                    <div className="flex justify-between items-start">
+                      <div className="w-12 h-12 rounded-lg bg-[#102544] border border-slate-700 flex items-center justify-center text-2xl group-hover:scale-110 group-hover:border-[#12D9F5] transition-all shadow-inner">
+                        {srv.icon}
+                      </div>
+                      <span className="text-[11px] font-['IBM_Plex_Mono'] text-[#12D9F5] font-semibold tracking-wider uppercase bg-[#12D9F5]/10 border border-[#12D9F5]/30 px-2.5 py-1 rounded">
+                        Service 0{idx + 1}
                       </span>
                     </div>
 
-                    <h3 className="font-neo text-xl font-bold text-white mb-1 group-hover:text-[#12D9F5] transition-colors">
-                      {prod.name}
+                    <h3 className="font-neo text-2xl font-bold text-white group-hover:text-[#12D9F5] transition-colors">
+                      {srv.title}
                     </h3>
-                    <div className="text-xs font-mono text-[#12D9F5] mb-3">
-                      {prod.tagline}
+
+                    {/* Problem → Solution → Business Outcome */}
+                    <div className="space-y-3.5 pt-2 border-t border-slate-800/80 text-xs font-['IBM_Plex_Mono']">
+                      <div className="bg-[#102544]/60 border-l-2 border-rose-400 p-2.5 rounded-r">
+                        <span className="text-rose-400 font-bold block mb-0.5 uppercase tracking-wider text-[10px]">Problem</span>
+                        <p className="text-slate-300 font-sans leading-relaxed text-xs">{srv.problem}</p>
+                      </div>
+
+                      <div className="bg-[#102544]/60 border-l-2 border-cyan-400 p-2.5 rounded-r">
+                        <span className="text-cyan-400 font-bold block mb-0.5 uppercase tracking-wider text-[10px]">Solution</span>
+                        <p className="text-slate-300 font-sans leading-relaxed text-xs">{srv.solution}</p>
+                      </div>
+
+                      <div className="bg-[#102544]/60 border-l-2 border-emerald-400 p-2.5 rounded-r">
+                        <span className="text-emerald-400 font-bold block mb-0.5 uppercase tracking-wider text-[10px]">Business Outcome</span>
+                        <p className="text-slate-300 font-sans leading-relaxed text-xs font-medium">{srv.businessOutcome}</p>
+                      </div>
                     </div>
-                    <p className="text-slate-400 text-xs leading-relaxed mb-6">
-                      {prod.description}
-                    </p>
                   </div>
 
-                  {prod.liveUrl ? (
-                    <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 pt-2">
-                      <a
-                        href={prod.liveUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        onClick={() => trackEvent('product_live_link_click', { product: prod.name, url: prod.liveUrl })}
-                        className="btn-shimmer inline-flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded bg-[#1557E8] hover:bg-[#168CFF] text-white shadow-md shadow-blue-700/30 transition-all hover:scale-105"
-                      >
-                        Launch Live App <ExternalLink className="w-3.5 h-3.5" />
-                      </a>
-                      <a
-                        href="#contact"
-                        onClick={() => trackEvent('product_inquire_click', { product: prod.name })}
-                        className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-400 hover:text-[#12D9F5] transition-colors"
-                      >
-                        Request Demo <ArrowRight className="w-3 h-3" />
-                      </a>
-                    </div>
-                  ) : (
+                  <div className="relative z-10 pt-6 mt-6 border-t border-slate-800/80 flex items-center justify-between">
+                    <span className="text-xs text-slate-400 font-mono">End-to-End Delivery</span>
                     <a
                       href="#contact"
-                      onClick={() => trackEvent('product_inquire_click', { product: prod.name })}
-                      className="relative z-10 inline-flex items-center gap-1.5 text-xs font-semibold text-[#12D9F5] hover:text-white transition-colors group-hover:translate-x-1"
+                      onClick={() => trackEvent('service_cta_click', { service: srv.title })}
+                      className="btn-shimmer inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded bg-[#1557E8] hover:bg-[#168CFF] text-white shadow-md shadow-blue-700/30 transition-all hover:scale-105"
                     >
-                      Request Early Access <ArrowRight className="w-3.5 h-3.5" />
+                      Talk to ALGorith <ArrowRight className="w-3.5 h-3.5" />
                     </a>
-                  )}
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </motion.div>
+                  </div>
+                </div>
+              </SectionReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* The ALGorith Intelligence Layer */}
+      <section id="intelligence" className="py-24 bg-[#0B1930] border-b border-slate-800/80 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#12D9F5]/5 via-transparent to-transparent pointer-events-none"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <SectionReveal className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#12D9F5]/10 border border-[#12D9F5]/30 text-[#12D9F5] font-['IBM_Plex_Mono'] text-xs font-semibold tracking-wider">
+              TECHNOLOGY DIRECTION &amp; R&amp;D ROADMAP
+            </div>
+            <h2 className="font-neo text-3xl sm:text-5xl font-bold tracking-tight text-white">
+              THE ALGorith INTELLIGENCE LAYER
+            </h2>
+            <p className="font-['IBM_Plex_Mono'] text-lg sm:text-xl text-[#12D9F5] tracking-wide font-medium">
+              &ldquo;Intelligence that understands. Agents that act. Systems that grow.&rdquo;
+            </p>
+            <p className="text-slate-400 text-base max-w-2xl mx-auto leading-relaxed">
+              ALGorith is building toward connected intelligent business systems—bridging foundational neural models, autonomous worker agents, event-driven automation, and live enterprise applications into a unified operational architecture.
+            </p>
+          </SectionReveal>
+
+          {/* Visual Flow: AI -> Agents -> Automation -> Data -> Analytics -> Business Applications */}
+          <div className="max-w-4xl mx-auto space-y-4">
+            {[
+              {
+                step: '01',
+                title: 'AI',
+                subtitle: 'Foundational Intelligence & RAG Core',
+                desc: 'Context-aware semantic knowledge ingestion and document retrieval tailored for enterprise data silos.',
+                icon: '🧠'
+              },
+              {
+                step: '02',
+                title: 'Agents',
+                subtitle: 'Autonomous Multi-Step Worker Agents',
+                desc: 'Self-governing agent networks executing complex multi-system operations with human-in-the-loop validation checkpoints.',
+                icon: '🤖'
+              },
+              {
+                step: '03',
+                title: 'Automation',
+                subtitle: 'Event-Driven Workflow Orchestration',
+                desc: 'Resilient webhook meshes and automated API triggers connecting disparate software without manual friction.',
+                icon: '⚡'
+              },
+              {
+                step: '04',
+                title: 'Data',
+                subtitle: 'Unified Enterprise Storage & Sync',
+                desc: 'Secure real-time synchronization of customer, operational, and financial records across distributed systems.',
+                icon: '🗄️'
+              },
+              {
+                step: '05',
+                title: 'Analytics',
+                subtitle: 'Predictive Business Intelligence',
+                desc: 'Real-time revenue forecasting, anomaly detection, and automated operational metric dashboards.',
+                icon: '📈'
+              },
+              {
+                step: '06',
+                title: 'Business Applications',
+                subtitle: 'Unified Command & Commercial Suite',
+                desc: 'Production-ready operating systems (Founder OS, CRM, Social, Cowork, and Cart) empowering modern teams.',
+                icon: '💻'
+              }
+            ].map((node, idx, arr) => (
+              <div key={node.step} className="flex flex-col items-center">
+                <SectionReveal delay={idx * 0.08} className="w-full">
+                  <div 
+                    onMouseMove={handleSpotlightMouseMove}
+                    className="spotlight-card bg-[#061226] border border-slate-800 hover:border-[#12D9F5] rounded-xl p-6 sm:p-7 transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 group"
+                  >
+                    <div className="flex items-center gap-5">
+                      <div className="w-14 h-14 rounded-xl bg-[#102544] border border-slate-700 flex items-center justify-center text-3xl group-hover:scale-110 group-hover:border-[#12D9F5] transition-all shrink-0">
+                        {node.icon}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-3 mb-1">
+                          <span className="font-['IBM_Plex_Mono'] text-xs font-semibold text-[#12D9F5] uppercase tracking-wider">
+                            Layer {node.step} — {node.title}
+                          </span>
+                        </div>
+                        <h4 className="font-neo text-xl font-bold text-white group-hover:text-[#12D9F5] transition-colors">
+                          {node.subtitle}
+                        </h4>
+                        <p className="text-slate-400 text-xs mt-1 max-w-xl leading-relaxed">
+                          {node.desc}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="shrink-0 font-['IBM_Plex_Mono'] text-xs text-slate-400 bg-[#102544] border border-slate-700 px-3 py-1.5 rounded-md">
+                      Architectural Node
+                    </div>
+                  </div>
+                </SectionReveal>
+
+                {/* Vertical flow arrow connector (except last item) */}
+                {idx < arr.length - 1 && (
+                  <div className="my-2 flex flex-col items-center justify-center text-[#12D9F5]">
+                    <div className="w-0.5 h-6 bg-gradient-to-b from-[#12D9F5] to-[#19DDB5] animate-pulse"></div>
+                    <div className="text-xs font-bold text-[#19DDB5] bg-[#061226] border border-[#12D9F5]/40 rounded-full w-6 h-6 flex items-center justify-center shadow-md">
+                      ↓
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -1560,18 +1705,94 @@ export default function App() {
         </div>
       </section>
 
+      {/* Vision & Mission Section */}
+      <section id="vision" className="py-24 bg-[#061226] border-b border-slate-800/80 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#1557E8]/5 via-transparent to-[#12D9F5]/5 pointer-events-none"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <SectionReveal className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#12D9F5]/10 border border-[#12D9F5]/30 text-[#12D9F5] font-['IBM_Plex_Mono'] text-xs font-semibold tracking-wider">
+              BRAND PHILOSOPHY &amp; DIRECTION
+            </div>
+            <h2 className="font-neo text-3xl sm:text-5xl font-bold tracking-tight text-white">
+              VISION &amp; MISSION
+            </h2>
+            <div className="font-['IBM_Plex_Mono'] text-xl sm:text-2xl text-[#12D9F5] font-bold tracking-wide py-2">
+              &ldquo;Think. Build. Automate. Grow.&rdquo;
+            </div>
+            <div className="bg-[#102544]/70 border border-slate-700/80 rounded-xl p-4 text-xs font-['IBM_Plex_Mono'] text-slate-300 max-w-xl mx-auto">
+              MINDSET: <span className="text-white font-semibold">Build for today. Think for tomorrow. Prepare for the future.</span>
+            </div>
+          </SectionReveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <SectionReveal delay={0.1} className="h-full">
+              <div 
+                onMouseMove={handleSpotlightMouseMove}
+                className="spotlight-card bg-[#0B1930] border border-slate-800 hover:border-[#12D9F5] rounded-2xl p-8 flex flex-col justify-between h-full transition-all duration-300 shadow-xl group"
+              >
+                <div className="space-y-4 relative z-10">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-['IBM_Plex_Mono'] text-[#12D9F5] font-semibold tracking-wider uppercase bg-[#12D9F5]/10 border border-[#12D9F5]/30 px-3 py-1 rounded">
+                      Our Vision
+                    </span>
+                    <span className="text-2xl">🔭</span>
+                  </div>
+                  <h3 className="font-neo text-2xl font-bold text-white group-hover:text-[#12D9F5] transition-colors">
+                    The North Star of ALGorith
+                  </h3>
+                  <p className="text-slate-300 text-sm leading-relaxed font-sans pt-2">
+                    &ldquo;To build an intelligent technology ecosystem that helps businesses and people solve complex problems, automate work and create sustainable growth.&rdquo;
+                  </p>
+                </div>
+                <div className="mt-8 pt-6 border-t border-slate-800 text-xs font-['IBM_Plex_Mono'] text-slate-400">
+                  Long-Term Ecosystem Strategy
+                </div>
+              </div>
+            </SectionReveal>
+
+            <SectionReveal delay={0.2} className="h-full">
+              <div 
+                onMouseMove={handleSpotlightMouseMove}
+                className="spotlight-card bg-[#0B1930] border border-slate-800 hover:border-[#12D9F5] rounded-2xl p-8 flex flex-col justify-between h-full transition-all duration-300 shadow-xl group"
+              >
+                <div className="space-y-4 relative z-10">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-['IBM_Plex_Mono'] text-[#19DDB5] font-semibold tracking-wider uppercase bg-[#19DDB5]/10 border border-[#19DDB5]/30 px-3 py-1 rounded">
+                      Our Mission
+                    </span>
+                    <span className="text-2xl">⚡</span>
+                  </div>
+                  <h3 className="font-neo text-2xl font-bold text-white group-hover:text-[#19DDB5] transition-colors">
+                    Daily Engineering Purpose
+                  </h3>
+                  <p className="text-slate-300 text-sm leading-relaxed font-sans pt-2">
+                    &ldquo;To design, build and deliver AI-powered software, data and automation solutions that turn complex challenges into simple, scalable outcomes.&rdquo;
+                  </p>
+                </div>
+                <div className="mt-8 pt-6 border-t border-slate-800 text-xs font-['IBM_Plex_Mono'] text-slate-400">
+                  Execution &amp; Delivery Standard
+                </div>
+              </div>
+            </SectionReveal>
+          </div>
+        </div>
+      </section>
+
       {/* About Section: Architectural Principles & Philosophy */}
       <section id="about" className="py-24 border-b border-slate-800/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionReveal className="text-center max-w-3xl mx-auto mb-16 space-y-3">
+          <SectionReveal className="text-center max-w-3xl mx-auto mb-16 space-y-4">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#12D9F5]/10 border border-[#12D9F5]/30 text-[#12D9F5] font-['IBM_Plex_Mono'] text-xs font-semibold tracking-wider">
-              OUR PHILOSOPHY
+              OUR PHILOSOPHY &amp; MINDSET
             </div>
             <h2 className="font-neo text-3xl sm:text-5xl font-bold tracking-tight text-white">
               ENGINEERING RIGOR OVER HYPE
             </h2>
+            <div className="bg-[#102544]/80 border border-[#12D9F5]/40 rounded-xl p-4 text-cyan-300 font-['IBM_Plex_Mono'] text-sm tracking-wide shadow-lg">
+              &ldquo;Build for today. Think for tomorrow. Prepare for the future.&rdquo;
+            </div>
             <p className="text-slate-400 text-base">
-              We operate as a high-conviction technology partner, translating complex operational bottlenecks into resilient software and automated workflows.
+              We operate as an AI-Native Technology &amp; Business Solutions Company, translating complex operational bottlenecks into resilient software and automated workflows.
             </p>
           </SectionReveal>
 
@@ -1794,6 +2015,107 @@ export default function App() {
         </div>
       </section>
 
+      {/* Conversion & Engagement Journey */}
+      <section className="py-24 bg-[#061226] border-b border-slate-800/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionReveal className="text-center max-w-3xl mx-auto mb-16 space-y-3">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#12D9F5]/10 border border-[#12D9F5]/30 text-[#12D9F5] font-['IBM_Plex_Mono'] text-xs font-semibold tracking-wider">
+              ENGAGEMENT ROADMAP
+            </div>
+            <h2 className="font-neo text-3xl sm:text-5xl font-bold tracking-tight text-white">
+              YOUR PATH TO INTELLIGENT OPERATIONS
+            </h2>
+            <p className="text-slate-400 text-lg">
+              &ldquo;A structured, frictionless journey from initial problem statement to verifiable customer success.&rdquo;
+            </p>
+          </SectionReveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+            {[
+              {
+                step: '01',
+                title: 'Problem',
+                desc: 'Identify operational bottlenecks & friction points.',
+                icon: '🔍'
+              },
+              {
+                step: '02',
+                title: 'Solution',
+                desc: 'Map challenges to pragmatic business solutions.',
+                icon: '💡'
+              },
+              {
+                step: '03',
+                title: 'Product / Service',
+                desc: 'Select ecosystem apps or engineering services.',
+                icon: '⚙️'
+              },
+              {
+                step: '04',
+                title: 'Demo / Consultation',
+                desc: 'Interactive preview & technical scoping session.',
+                icon: '📅'
+              },
+              {
+                step: '05',
+                title: 'Pilot',
+                desc: 'Risk-free scoped trial & prototype deployment.',
+                icon: '🚀'
+              },
+              {
+                step: '06',
+                title: 'Customer',
+                desc: 'Long-term operational scale & dedicated support.',
+                icon: '🏆'
+              }
+            ].map((j, idx) => (
+              <SectionReveal key={j.step} delay={idx * 0.08} className="h-full">
+                <div 
+                  onMouseMove={handleSpotlightMouseMove}
+                  className="spotlight-card bg-[#0B1930] border border-slate-800 hover:border-[#12D9F5] rounded-xl p-5 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 h-full group"
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-['IBM_Plex_Mono'] text-[#12D9F5] font-semibold">{j.step}</span>
+                      <span className="text-xl">{j.icon}</span>
+                    </div>
+                    <h3 className="font-neo text-lg font-bold text-white group-hover:text-[#12D9F5] transition-colors">{j.title}</h3>
+                    <p className="text-slate-400 text-xs leading-relaxed">{j.desc}</p>
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-slate-800/80 text-[10px] font-['IBM_Plex_Mono'] text-[#19DDB5] uppercase">
+                    Stage {idx + 1} of 6
+                  </div>
+                </div>
+              </SectionReveal>
+            ))}
+          </div>
+
+          <div className="mt-12 text-center flex flex-wrap justify-center gap-4">
+            <a
+              href="#contact"
+              onClick={() => trackEvent('journey_talk_click')}
+              className="btn-shimmer inline-flex items-center gap-2 bg-[#1557E8] hover:bg-[#168CFF] text-white font-semibold px-7 py-3.5 rounded shadow-lg shadow-blue-700/30 transition-all text-sm"
+            >
+              Talk to ALGorith <ArrowRight className="w-4 h-4" />
+            </a>
+            <a
+              href="#products"
+              onClick={() => trackEvent('journey_products_click')}
+              className="inline-flex items-center gap-2 bg-[#102544] hover:bg-[#16325B] text-slate-200 border border-slate-700 font-semibold px-6 py-3.5 rounded hover:border-[#12D9F5] hover:text-[#12D9F5] transition-all text-sm"
+            >
+              Explore Products
+            </a>
+            <a
+              href="#services"
+              onClick={() => trackEvent('journey_services_click')}
+              className="inline-flex items-center gap-2 bg-[#102544] hover:bg-[#16325B] text-slate-200 border border-slate-700 font-semibold px-6 py-3.5 rounded hover:border-[#12D9F5] hover:text-[#12D9F5] transition-all text-sm"
+            >
+              Explore Services
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Consultation / Contact Section */}
       <section id="contact" className="py-24 bg-[#0B1930] border-b border-slate-800/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1987,19 +2309,19 @@ export default function App() {
               whileHover={{ scale: 1.04, y: -2 }}
               whileTap={{ scale: 0.98 }}
               href="#contact"
-              onClick={() => trackEvent('final_cta_build_click')}
+              onClick={() => trackEvent('final_cta_talk_click')}
               className="btn-shimmer inline-flex items-center gap-2 bg-[#1557E8] hover:bg-[#168CFF] text-white font-semibold px-7 py-3 rounded text-sm shadow-lg shadow-blue-700/30 transition-all"
             >
-              Let's Build →
+              Talk to ALGorith →
             </motion.a>
             <motion.a 
               whileHover={{ scale: 1.04, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              href="#solutions"
-              onClick={() => trackEvent('final_cta_solutions_click')}
+              href="#services"
+              onClick={() => trackEvent('final_cta_services_click')}
               className="inline-flex items-center gap-2 bg-[#102544] hover:bg-[#16325B] text-slate-200 border border-slate-700 text-sm font-semibold px-7 py-3 rounded hover:border-[#12D9F5] hover:text-[#12D9F5] transition-all"
             >
-              Explore Solutions
+              Explore Services
             </motion.a>
           </div>
         </SectionReveal>

@@ -21,9 +21,9 @@ export interface CompanyConfig {
 export const COMPANY: CompanyConfig = {
   name: "ALGorith Technologies",
   legalName: "ALGorith Technologies Inc.",
-  slogan: "THINK • BUILD • AUTOMATE • GROW",
-  positioning: "AI-first Technology & Digital Innovation Company",
-  core: "AI • SOFTWARE • DATA • AUTOMATION",
+  slogan: "Think. Build. Automate. Grow.",
+  positioning: "An AI-Native Technology & Business Solutions Company",
+  core: "AI • Software • Data • Automation • Business Systems • Digital Transformation",
   domain: "algorith.in",
   url: "https://algorith.in",
   email: "contact@algorith.in",
