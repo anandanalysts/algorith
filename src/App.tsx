@@ -38,12 +38,20 @@ import {
   Zap,
   Lock,
   ArrowUpRight,
-  Maximize2
+  Maximize2,
+  GraduationCap,
+  Download,
+  Upload,
+  FileDown,
+  FileText
 } from 'lucide-react';
 
 import { COMPANY, trackEvent } from './config';
 import { PRODUCTS, INDUSTRIES, INSIGHTS, ECOSYSTEM_GROUPS, SERVICES, SOLUTIONS, ProductItem, InsightItem, ServiceItem, SolutionItem } from './data';
 import { AlgorithLogo, AlgorithLogoIcon } from './components/Logo';
+import { LearningHub } from './components/LearningHub';
+import { INITIAL_LEARNING_MATERIALS } from './data/learningMaterials';
+import { LearningMaterial } from './types/learning';
 
 interface ScenarioData {
   title: string;
@@ -217,6 +225,48 @@ export default function App() {
 
   // Selected Insight Modal
   const [selectedInsight, setSelectedInsight] = useState<InsightItem | null>(null);
+
+  // View Routing: Home vs Dedicated Learning Hub Page
+  const [currentView, setCurrentView] = useState<'home' | 'learning'>(() => {
+    return typeof window !== 'undefined' && window.location.hash === '#learning' ? 'learning' : 'home';
+  });
+
+  // 1-Click download toast for homepage quick downloads
+  const [homeDownloadToast, setHomeDownloadToast] = useState<{ title: string; filename: string } | null>(null);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      if (window.location.hash === '#learning') {
+        setCurrentView('learning');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (window.location.hash === '' || window.location.hash === '#' || window.location.hash.startsWith('#solutions') || window.location.hash.startsWith('#contact') || window.location.hash.startsWith('#services') || window.location.hash.startsWith('#products')) {
+        setCurrentView('home');
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  const handleQuickDownload = (material: LearningMaterial, e: React.MouseEvent) => {
+    e.stopPropagation();
+    trackEvent('learning_quick_download', { id: material.id, title: material.title });
+    const authorName = typeof material.author === 'string' ? material.author : material.author?.name || 'ALGorith Research';
+    const filename = `${material.title.toLowerCase().replace(/[^a-z0-9]/g, '-')}.${material.fileFormat.toLowerCase()}`;
+    const content = material.fileContent || `# ${material.title}\nCategory: ${material.category}\nFormat: ${material.fileFormat}\nAuthor: ${authorName}\nPublished by: ALGorith Technologies Learning Hub\n\n${material.description}\n\n=========================================\nALGorith Official Learning Resource\nThink. Build. Automate. Grow.\n=========================================`;
+    
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+    setHomeDownloadToast({ title: material.title, filename });
+    setTimeout(() => setHomeDownloadToast(null), 3500);
+  };
 
   // Consultation Form
   const [selectedSlot, setSelectedSlot] = useState<string>('Mon — 10:00 AM EST');
@@ -481,8 +531,48 @@ export default function App() {
     }, 700);
   };
 
+  // If currently navigating the full Learning Hub Page
+  if (currentView === 'learning') {
+    return (
+      <LearningHub
+        onBackToHome={() => {
+          setCurrentView('home');
+          window.location.hash = '';
+        }}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen text-[#F8FAFC] bg-[#061226] font-['Inter'] relative selection:bg-[#12D9F5]/30 selection:text-white bg-tech-grid">
+      {/* 1-Click Download Notification Toast for Homepage */}
+      <AnimatePresence>
+        {homeDownloadToast && (
+          <motion.div
+            initial={{ opacity: 0, y: -40, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            className="fixed top-6 right-6 z-50 bg-[#0B1930] border border-[#19DDB5] text-white px-5 py-4 rounded-xl shadow-2xl shadow-cyan-500/20 flex items-start gap-4 max-w-md"
+          >
+            <div className="w-10 h-10 rounded-lg bg-[#19DDB5]/20 text-[#19DDB5] flex items-center justify-center shrink-0">
+              <CheckCircle2 className="w-6 h-6" />
+            </div>
+            <div className="flex-1">
+              <h4 className="font-neo text-sm font-bold text-white flex items-center gap-2">
+                1-Click Download Started!
+              </h4>
+              <p className="text-xs text-slate-300 font-sans mt-0.5 line-clamp-1">{homeDownloadToast.title}</p>
+              <p className="text-[11px] font-mono text-[#12D9F5] mt-1">{homeDownloadToast.filename}</p>
+            </div>
+            <button
+              onClick={() => setHomeDownloadToast(null)}
+              className="text-slate-400 hover:text-white"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
       
       {/* Quick Live Status Widget */}
       <motion.div 
@@ -541,6 +631,10 @@ export default function App() {
           <a href="#services" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-800/80 hover:text-[#12D9F5] transition-colors">Services</a>
           <a href="#products" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-800/80 hover:text-[#12D9F5] transition-colors">Products</a>
           <a href="#intelligence" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-800/80 hover:text-[#12D9F5] transition-colors">Intelligence</a>
+          <a href="#learning" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-800/80 text-[#12D9F5] hover:text-[#19DDB5] transition-colors flex items-center justify-between">
+            <span>Learning Hub</span>
+            <span className="text-[10px] bg-[#12D9F5]/20 text-[#12D9F5] px-2 py-0.5 rounded font-mono">1-Click DL</span>
+          </a>
           <a href="#vision" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-800/80 hover:text-[#12D9F5] transition-colors">Vision</a>
           <a href="#industries" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-800/80 hover:text-[#12D9F5] transition-colors">Industries</a>
           <a href="#work" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-800/80 hover:text-[#12D9F5] transition-colors">Work</a>
@@ -563,16 +657,53 @@ export default function App() {
       {/* Header */}
       <header className="sticky top-0 z-30 bg-[#061226]/90 backdrop-blur-md border-b border-slate-800/80 transition-all">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <a href="#" aria-label="ALGorith Technologies">
+          <a 
+            href="#" 
+            onClick={(e) => {
+              e.preventDefault();
+              setCurrentView('home');
+              window.location.hash = '';
+            }}
+            aria-label="ALGorith Technologies"
+          >
             <AlgorithLogo size={32} />
           </a>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-7 text-sm font-medium text-slate-300">
-            {['Solutions', 'Services', 'Products', 'Intelligence', 'Vision', 'Industries', 'Work', 'About', 'Insights'].map((item) => (
+          <nav className="hidden lg:flex items-center gap-6 text-sm font-medium text-slate-300">
+            {['Solutions', 'Services', 'Products', 'Intelligence'].map((item) => (
               <a 
                 key={item}
                 href={`#${item.toLowerCase()}`} 
+                onClick={() => setCurrentView('home')}
+                className="hover:text-[#12D9F5] transition-colors relative py-1 group"
+              >
+                {item}
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#12D9F5] transition-all duration-300 group-hover:w-full"></span>
+              </a>
+            ))}
+
+            {/* Learning Hub Dedicated Nav Link */}
+            <a 
+              href="#learning" 
+              onClick={() => {
+                setCurrentView('learning');
+                trackEvent('header_learning_hub_click');
+              }}
+              className="flex items-center gap-1.5 text-[#12D9F5] hover:text-white transition-colors relative py-1 group font-semibold"
+            >
+              <span>Learning</span>
+              <span className="text-[10px] font-mono bg-[#12D9F5]/20 text-[#12D9F5] group-hover:bg-[#12D9F5] group-hover:text-[#061226] transition-colors px-1.5 py-0.2 rounded font-bold uppercase tracking-wider">
+                Vault
+              </span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#12D9F5] transition-all duration-300 group-hover:w-full"></span>
+            </a>
+
+            {['Vision', 'Industries', 'Work', 'About', 'Insights'].map((item) => (
+              <a 
+                key={item}
+                href={`#${item.toLowerCase()}`} 
+                onClick={() => setCurrentView('home')}
                 className="hover:text-[#12D9F5] transition-colors relative py-1 group"
               >
                 {item}
@@ -1939,6 +2070,130 @@ export default function App() {
         )}
       </AnimatePresence>
 
+      {/* Featured Learning Hub Showcase */}
+      <section id="learning" className="py-24 bg-[#061226] border-b border-slate-800/80 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#1557E8]/5 via-transparent to-[#12D9F5]/5 pointer-events-none"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <SectionReveal className="space-y-3 max-w-2xl">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#12D9F5]/10 border border-[#12D9F5]/30 text-[#12D9F5] font-['IBM_Plex_Mono'] text-xs font-semibold tracking-wider">
+                <GraduationCap className="w-3.5 h-3.5" />
+                OPEN KNOWLEDGE VAULT &bull; 1-CLICK FREE DOWNLOADS
+              </div>
+              <h2 className="font-neo text-3xl sm:text-5xl font-bold tracking-tight text-white">
+                LEARNING HUB &amp; TECH ARCHIVES
+              </h2>
+              <p className="text-slate-400 text-base sm:text-lg">
+                High-impact E-Books, technical whitepapers, infographics, audio briefings, and video masterclasses on AI, automation, and emerging technology.
+              </p>
+            </SectionReveal>
+
+            <SectionReveal delay={0.1} className="flex items-center gap-3 shrink-0">
+              <button
+                onClick={() => {
+                  setCurrentView('learning');
+                  window.location.hash = '#learning';
+                  trackEvent('home_open_learning_hub_click');
+                }}
+                className="btn-shimmer inline-flex items-center gap-2 bg-[#1557E8] hover:bg-[#168CFF] text-white font-semibold text-xs px-5 py-3 rounded-xl shadow-lg shadow-blue-700/30 transition-all hover:scale-105"
+              >
+                <span>Explore Full Learning Hub ({INITIAL_LEARNING_MATERIALS.length}+ Resources)</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </SectionReveal>
+          </div>
+
+          {/* Featured 3-column Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {INITIAL_LEARNING_MATERIALS.slice(0, 3).map((mat, idx) => (
+              <SectionReveal key={mat.id} delay={idx * 0.1}>
+                <div 
+                  onMouseMove={handleSpotlightMouseMove}
+                  className="spotlight-card bg-[#0B1930] border border-slate-800 hover:border-[#12D9F5] rounded-2xl overflow-hidden p-0 flex flex-col justify-between h-full transition-all duration-300 hover:-translate-y-1.5 group shadow-xl"
+                >
+                  <div className="relative h-44 w-full bg-[#102544] overflow-hidden">
+                    {mat.thumbnailUrl && (
+                      <img 
+                        src={mat.thumbnailUrl} 
+                        alt={mat.title} 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80 group-hover:opacity-100"
+                      />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B1930] via-transparent to-black/40"></div>
+                    <div className="absolute top-3 left-3 flex items-center gap-2">
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded bg-[#061226]/80 text-[#12D9F5] border border-[#12D9F5]/30">
+                        {mat.fileFormat} &bull; {mat.fileSize}
+                      </span>
+                    </div>
+                    <div className="absolute bottom-3 left-3 flex items-center gap-1.5 text-xs text-white font-mono bg-[#061226]/90 px-2.5 py-1 rounded-md border border-slate-700">
+                      {mat.type === 'ebook' && <BookOpen className="w-3.5 h-3.5 text-[#12D9F5]" />}
+                      {mat.type === 'document' && <FileText className="w-3.5 h-3.5 text-[#19DDB5]" />}
+                      {mat.type === 'image' && <BookOpen className="w-3.5 h-3.5 text-purple-400" />}
+                      <span className="capitalize">{mat.type}</span>
+                      {mat.pageCount && <span className="text-slate-400">({mat.pageCount} pgs)</span>}
+                    </div>
+                  </div>
+
+                  <div className="p-6 space-y-3 flex-1 flex flex-col justify-between">
+                    <div className="space-y-2">
+                      <div className="text-[11px] font-mono text-[#12D9F5] uppercase tracking-wider">
+                        {mat.category}
+                      </div>
+                      <h3 className="font-neo text-lg font-bold text-white group-hover:text-[#12D9F5] transition-colors line-clamp-2">
+                        {mat.title}
+                      </h3>
+                      <p className="text-xs text-slate-400 font-sans line-clamp-2 leading-relaxed">
+                        {mat.description}
+                      </p>
+                    </div>
+
+                    <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between gap-3 mt-4">
+                      <div className="text-[11px] font-mono text-slate-400 truncate">
+                        By {typeof mat.author === 'string' ? mat.author : mat.author?.name || 'ALGorith Research'}
+                      </div>
+
+                      {/* 1-CLICK INSTANT DOWNLOAD BUTTON */}
+                      <button
+                        onClick={(e) => handleQuickDownload(mat, e)}
+                        title="1-Click Instant Download"
+                        className="btn-shimmer flex items-center gap-1.5 bg-[#1557E8] hover:bg-[#168CFF] text-white text-xs font-semibold px-4 py-2 rounded-lg shadow-md shadow-blue-700/20 transition-all hover:scale-105 active:scale-95 shrink-0"
+                      >
+                        <FileDown className="w-4 h-4" />
+                        <span>Download</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </SectionReveal>
+            ))}
+          </div>
+
+          {/* Bottom Banner */}
+          <div className="mt-12 p-6 rounded-2xl bg-[#102544]/50 border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-[#12D9F5]/10 border border-[#12D9F5]/30 flex items-center justify-center text-2xl shrink-0">
+                📤
+              </div>
+              <div>
+                <h4 className="font-neo text-base font-bold text-white">Have research, eBooks, or templates to share?</h4>
+                <p className="text-xs text-slate-400">Upload your PDF documents, JPG/PNG diagrams, code or video masterclasses for the global community.</p>
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                setCurrentView('learning');
+                window.location.hash = '#learning';
+                trackEvent('home_upload_banner_click');
+              }}
+              className="inline-flex items-center gap-2 bg-[#0B1930] hover:bg-[#16325B] text-[#12D9F5] hover:text-white border border-[#12D9F5]/40 text-xs font-mono font-semibold px-5 py-2.5 rounded-xl transition-all shrink-0"
+            >
+              <Upload className="w-4 h-4" />
+              <span>Upload to Learning Hub</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ Section */}
       <section id="faq" className="py-24 border-b border-slate-800/80">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -2401,16 +2656,19 @@ export default function App() {
 
             <div>
               <h5 className="font-['IBM_Plex_Mono'] text-xs font-semibold text-[#12D9F5] uppercase tracking-wider mb-4">
-                Company &amp; Social
+                Resources &amp; Hub
               </h5>
               <ul className="space-y-2.5 text-xs text-slate-400">
-                <li><a href="#method" className="hover:text-white transition-colors">Method</a></li>
-                <li><a href="#industries" className="hover:text-white transition-colors">Industries</a></li>
-                <li><a href="#work" className="hover:text-white transition-colors">Work</a></li>
-                <li><a href="#about" className="hover:text-white transition-colors">About</a></li>
-                <li><a href="#insights" className="hover:text-white transition-colors">Insights</a></li>
-                <li><a href={COMPANY.social.linkedin} target="_blank" rel="noreferrer" className="hover:text-[#12D9F5] transition-colors">LinkedIn</a></li>
-                <li><a href={COMPANY.social.x} target="_blank" rel="noreferrer" className="hover:text-[#12D9F5] transition-colors">X / Twitter</a></li>
+                <li>
+                  <a href="#learning" className="text-[#12D9F5] hover:text-[#19DDB5] font-semibold transition-colors flex items-center gap-1.5">
+                    <span>Learning Hub</span>
+                    <span className="text-[9px] font-mono bg-[#12D9F5]/20 text-[#12D9F5] px-1.5 py-0.5 rounded">1-CLICK</span>
+                  </a>
+                </li>
+                <li><a href="#learning" className="hover:text-white transition-colors">AI E-Books &amp; Blueprints</a></li>
+                <li><a href="#learning" className="hover:text-white transition-colors">System Architecture Diagrams</a></li>
+                <li><a href="#learning" className="hover:text-white transition-colors">Masterclass Audio &amp; Video</a></li>
+                <li><a href="#insights" className="hover:text-white transition-colors">Engineering Insights</a></li>
               </ul>
             </div>
 
