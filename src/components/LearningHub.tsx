@@ -29,12 +29,20 @@ import {
   HelpCircle,
   Plus,
   Play,
-  FileSpreadsheet
+  FileSpreadsheet,
+  ShieldCheck,
+  Lock,
+  Trash2,
+  LogOut,
+  Key,
+  ShieldAlert
 } from 'lucide-react';
 import { LearningMaterial, MaterialCategory, MaterialType, LearningLevel } from '../types/learning';
 import { INITIAL_LEARNING_MATERIALS } from '../data/learningMaterials';
 import { AlgorithLogo } from './Logo';
 import { COMPANY, trackEvent } from '../config';
+import { AdminUser, getAuthSession, clearAuthSession, isAuthorizedUploader } from '../utils/learningAuth';
+import { AdminAuthModal } from './learning/AdminAuthModal';
 
 interface LearningHubProps {
   onBackToHome?: () => void;
@@ -107,6 +115,9 @@ export const LearningHub: React.FC<LearningHubProps> = ({ onBackToHome }) => {
 
   // Modals & Active Material for preview
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [adminUser, setAdminUser] = useState<AdminUser | null>(() => getAuthSession());
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [deleteConfirmMaterial, setDeleteConfirmMaterial] = useState<LearningMaterial | null>(null);
   const [previewMaterial, setPreviewMaterial] = useState<LearningMaterial | null>(null);
   const [downloadNotification, setDownloadNotification] = useState<{ title: string; filename: string } | null>(null);
   const [copyShareNotification, setCopyShareNotification] = useState(false);
@@ -269,8 +280,46 @@ export const LearningHub: React.FC<LearningHubProps> = ({ onBackToHome }) => {
     reader.readAsDataURL(file);
   };
 
+  const handleOpenUploadClick = () => {
+    if (isAuthorizedUploader(adminUser)) {
+      setUploadForm(prev => ({
+        ...prev,
+        authorName: prev.authorName || adminUser?.name || '',
+        authorRole: prev.authorRole || (adminUser?.role === 'owner' ? 'Owner & Lead Architect' : 'System Administrator')
+      }));
+      setIsUploadModalOpen(true);
+    } else {
+      setIsAuthModalOpen(true);
+    }
+  };
+
+  const handleLogout = () => {
+    clearAuthSession();
+    setAdminUser(null);
+    setIsUploadModalOpen(false);
+  };
+
+  const handleDeleteMaterial = (material: LearningMaterial, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setDeleteConfirmMaterial(material);
+  };
+
+  const confirmDelete = () => {
+    if (!deleteConfirmMaterial) return;
+    setMaterials(prev => prev.filter(m => m.id !== deleteConfirmMaterial.id));
+    setDeleteConfirmMaterial(null);
+  };
+
   const handleUploadSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // STRICT OWNER/ADMIN CHECK
+    if (!isAuthorizedUploader(adminUser)) {
+      setUploadError('Access Restricted: Only the Owner or verified Admins can upload learning materials.');
+      setIsAuthModalOpen(true);
+      return;
+    }
+
     if (!uploadForm.title.trim()) {
       setUploadError('Please provide a title for the learning material.');
       return;
@@ -281,6 +330,9 @@ export const LearningHub: React.FC<LearningHubProps> = ({ onBackToHome }) => {
     }
 
     setIsSubmittingUpload(true);
+
+    const verifiedRole = adminUser?.role === 'owner' ? 'Owner & System Architect' : 'System Administrator';
+    const verifiedName = uploadForm.authorName.trim() || adminUser?.name || 'ALGorith Lead';
 
     const newMaterial: LearningMaterial = {
       id: `usr-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
@@ -302,8 +354,8 @@ export const LearningHub: React.FC<LearningHubProps> = ({ onBackToHome }) => {
         .map(t => t.trim())
         .filter(Boolean),
       author: {
-        name: uploadForm.authorName.trim() || 'Community Contributor',
-        role: uploadForm.authorRole.trim() || 'Tech Researcher'
+        name: verifiedName,
+        role: uploadForm.authorRole.trim() || verifiedRole
       },
       fileUrl: uploadForm.fileDataUri || undefined,
       fileContent: uploadForm.fileTextContent || undefined,
@@ -480,6 +532,29 @@ export const LearningHub: React.FC<LearningHubProps> = ({ onBackToHome }) => {
           </div>
 
           <div className="flex items-center gap-3">
+            {adminUser ? (
+              <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-mono">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="font-semibold">{adminUser.role === 'owner' ? `Owner: ${adminUser.name}` : `Admin: ${adminUser.name}`}</span>
+                <button
+                  onClick={handleLogout}
+                  title="Sign out of Admin Session"
+                  className="ml-1 text-slate-400 hover:text-rose-400 p-0.5 rounded transition-colors"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setIsAuthModalOpen(true)}
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0B1930] hover:bg-[#102544] border border-slate-800 text-slate-400 hover:text-white text-xs font-mono transition-all"
+                title="Owner or Admin Authentication"
+              >
+                <Lock className="w-3.5 h-3.5 text-amber-400" />
+                <span>Admin Login</span>
+              </button>
+            )}
+
             <button
               onClick={() => setShowBookmarksOnly(prev => !prev)}
               className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono transition-all border ${
@@ -496,11 +571,20 @@ export const LearningHub: React.FC<LearningHubProps> = ({ onBackToHome }) => {
             </button>
 
             <button
-              onClick={() => setIsUploadModalOpen(true)}
+              onClick={handleOpenUploadClick}
               className="btn-shimmer flex items-center gap-2 bg-[#1557E8] hover:bg-[#168CFF] text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-lg shadow-blue-700/30 transition-all"
             >
-              <Upload className="w-4 h-4" />
-              <span>Upload Material</span>
+              {adminUser ? (
+                <>
+                  <Upload className="w-4 h-4" />
+                  <span>Upload Material</span>
+                </>
+              ) : (
+                <>
+                  <Lock className="w-3.5 h-3.5 text-amber-300" />
+                  <span>Upload Material</span>
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -537,8 +621,8 @@ export const LearningHub: React.FC<LearningHubProps> = ({ onBackToHome }) => {
               <div className="text-xs font-mono text-slate-400 mt-1">PDF, EPUB, AV, Code</div>
             </div>
             <div className="bg-[#0B1930]/80 border border-slate-800 p-4 rounded-xl">
-              <div className="text-2xl font-bold font-neo text-purple-400">Open Vault</div>
-              <div className="text-xs font-mono text-slate-400 mt-1">Community Uploads Supported</div>
+              <div className="text-2xl font-bold font-neo text-purple-400">Vault Security</div>
+              <div className="text-xs font-mono text-slate-400 mt-1">Owner &amp; Admin Uploaded</div>
             </div>
           </div>
         </div>
@@ -594,7 +678,7 @@ export const LearningHub: React.FC<LearningHubProps> = ({ onBackToHome }) => {
               </div>
 
               <button
-                onClick={() => setIsUploadModalOpen(true)}
+                onClick={handleOpenUploadClick}
                 className="hidden sm:flex items-center gap-1.5 text-xs font-mono bg-[#102544] hover:bg-[#16325B] text-[#12D9F5] border border-[#12D9F5]/40 px-3.5 py-3 rounded-xl transition-all"
               >
                 <Plus className="w-4 h-4" />
@@ -720,6 +804,15 @@ export const LearningHub: React.FC<LearningHubProps> = ({ onBackToHome }) => {
                         </span>
 
                         <div className="flex items-center gap-1.5">
+                          {adminUser && (
+                            <button
+                              onClick={(e) => handleDeleteMaterial(mat, e)}
+                              title="Delete Material (Admin)"
+                              className="p-1.5 rounded-lg backdrop-blur-md border bg-rose-500/10 border-rose-500/30 text-rose-400 hover:bg-rose-500/25 transition-all"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
                           <button
                             onClick={(e) => toggleBookmark(mat.id, e)}
                             title={isBookmarked ? "Remove Bookmark" : "Save Bookmark"}
@@ -952,8 +1045,16 @@ export const LearningHub: React.FC<LearningHubProps> = ({ onBackToHome }) => {
                     <Upload className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="font-neo text-xl font-bold text-white">Upload Learning Material</h3>
-                    <p className="text-xs text-slate-400">Share Ebooks, PDFs, JPG/PNG, Video, Audio or Tech Research</p>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-neo text-xl font-bold text-white">Upload Learning Material</h3>
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 text-[10px] font-mono font-bold uppercase">
+                        <ShieldCheck className="w-3 h-3" />
+                        {adminUser?.role === 'owner' ? 'Owner Verified' : 'Admin Verified'}
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-400">
+                      Publishing as <strong className="text-white">{adminUser?.name}</strong> ({adminUser?.email})
+                    </p>
                   </div>
                 </div>
                 <button
@@ -1147,6 +1248,60 @@ export const LearningHub: React.FC<LearningHubProps> = ({ onBackToHome }) => {
                   </button>
                 </div>
               </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Admin Authentication Modal */}
+      <AdminAuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onAuthenticated={(user) => {
+          setAdminUser(user);
+          setUploadForm(prev => ({
+            ...prev,
+            authorName: user.name,
+            authorRole: user.role === 'owner' ? 'Owner & System Architect' : 'System Administrator'
+          }));
+          setIsUploadModalOpen(true);
+        }}
+      />
+
+      {/* Delete Confirmation Modal for Admin */}
+      <AnimatePresence>
+        {deleteConfirmMaterial && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-[#0B1930] border border-rose-500/40 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl text-white"
+            >
+              <div className="w-12 h-12 rounded-xl bg-rose-500/20 border border-rose-500/30 flex items-center justify-center text-rose-400">
+                <Trash2 className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="font-neo text-lg font-bold text-white">Confirm Removal</h3>
+                <p className="text-xs text-slate-300 mt-1">
+                  Are you sure you want to remove <strong className="text-white font-semibold">"{deleteConfirmMaterial.title}"</strong> from the repository?
+                </p>
+              </div>
+              <div className="flex justify-end gap-3 pt-2">
+                <button
+                  onClick={() => setDeleteConfirmMaterial(null)}
+                  className="px-4 py-2 rounded-xl border border-slate-700 text-xs font-mono text-slate-300 hover:text-white transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmDelete}
+                  className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold shadow-lg shadow-rose-900/30 transition-all flex items-center gap-1.5"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Delete Material</span>
+                </button>
+              </div>
             </motion.div>
           </div>
         )}

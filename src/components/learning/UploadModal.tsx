@@ -1,19 +1,35 @@
-import React, { useState, useRef } from 'react';
-import { X, Upload, FileText, Image as ImageIcon, Video, Music, Code, CheckCircle, AlertCircle, Sparkles } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { X, Upload, FileText, Image as ImageIcon, Video, Music, Code, CheckCircle, AlertCircle, Sparkles, ShieldCheck, Lock, UserCheck } from 'lucide-react';
 import { LearningCategory, LearningFileType, LearningLevel, LearningMaterial } from '../../types/learning';
+import { AdminUser, getAuthSession, isAuthorizedUploader } from '../../utils/learningAuth';
 
 interface UploadModalProps {
   isOpen: boolean;
   onClose: () => void;
   onUploadSuccess: (material: LearningMaterial) => void;
+  currentUser?: AdminUser | null;
+  onRequestAuth?: () => void;
 }
 
 export const UploadModal: React.FC<UploadModalProps> = ({
   isOpen,
   onClose,
   onUploadSuccess,
+  currentUser: propUser,
+  onRequestAuth,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Check auth session
+  const [currentUser, setCurrentUser] = useState<AdminUser | null>(() => propUser || getAuthSession());
+
+  useEffect(() => {
+    if (propUser) {
+      setCurrentUser(propUser);
+    } else {
+      setCurrentUser(getAuthSession());
+    }
+  }, [propUser, isOpen]);
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -30,7 +46,55 @@ export const UploadModal: React.FC<UploadModalProps> = ({
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
 
+  // Set default author name if user is logged in
+  useEffect(() => {
+    if (currentUser && !authorName) {
+      setAuthorName(currentUser.name);
+    }
+  }, [currentUser]);
+
   if (!isOpen) return null;
+
+  // STRICT CHECK: If user is not authorized, show gate prompt
+  if (!isAuthorizedUploader(currentUser)) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+        <div 
+          className="fixed inset-0 bg-[#061226]/85 backdrop-blur-md transition-opacity"
+          onClick={onClose}
+        />
+        <div className="relative z-10 bg-[#0B1930] border border-amber-500/40 rounded-2xl w-full max-w-md shadow-2xl p-6 sm:p-8 space-y-6 text-white text-center">
+          <div className="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center mx-auto text-amber-400">
+            <Lock className="w-7 h-7" />
+          </div>
+          <div className="space-y-2">
+            <h3 className="font-neo text-xl font-bold text-white">Owner or Admin Only</h3>
+            <p className="text-xs text-slate-300 font-sans leading-relaxed">
+              Uploading technical whitepapers, e-books, datasets, and blueprints to the ALGorith Learning Hub is strictly restricted to the <strong className="text-white">Owner</strong> and <strong className="text-white">Authorized Administrators</strong>.
+            </p>
+          </div>
+          <div className="flex flex-col gap-2.5 pt-2">
+            <button
+              onClick={() => {
+                onClose();
+                onRequestAuth?.();
+              }}
+              className="btn-shimmer w-full py-3 bg-[#1557E8] hover:bg-[#168CFF] text-white text-xs font-bold rounded-xl shadow-lg flex items-center justify-center gap-2"
+            >
+              <ShieldCheck className="w-4 h-4" />
+              <span>Verify as Owner / Admin</span>
+            </button>
+            <button
+              onClick={onClose}
+              className="w-full py-2.5 bg-[#061226] hover:bg-slate-800 border border-slate-700 text-xs font-mono text-slate-400 hover:text-white rounded-xl transition-colors"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -112,6 +176,13 @@ export const UploadModal: React.FC<UploadModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Security check
+    if (!isAuthorizedUploader(currentUser)) {
+      setErrorMsg('Permission Denied: Uploads are restricted to the Owner or verified Admins only.');
+      return;
+    }
+
     if (!title.trim()) {
       setErrorMsg('Please enter a title for the learning resource.');
       return;
@@ -128,6 +199,9 @@ export const UploadModal: React.FC<UploadModalProps> = ({
       ? tagsInput.split(',').map(t => t.trim()).filter(Boolean)
       : [category, fileType.toUpperCase(), 'AI'];
 
+    const uploaderRole = currentUser?.role === 'owner' ? 'Owner (Verified)' : 'Admin (Verified)';
+    const assignedAuthor = authorName.trim() || currentUser?.name || 'ALGorith Team';
+
     const newMaterial: LearningMaterial = {
       id: `upload-${Date.now()}`,
       title: title.trim(),
@@ -142,10 +216,10 @@ export const UploadModal: React.FC<UploadModalProps> = ({
       downloadsCount: 1,
       uploadDate: new Date().toISOString().split('T')[0],
       uploadedAt: new Date().toISOString().split('T')[0],
-      author: authorName.trim() || 'Community Contributor',
+      author: assignedAuthor,
       authorDetails: {
-        name: authorName.trim() || 'Community Contributor',
-        role: 'Community Engineer',
+        name: assignedAuthor,
+        role: uploaderRole,
       },
       level: level,
       previewContent: previewContent.trim() || `# ${title}\n\n${description}`,
@@ -176,18 +250,24 @@ export const UploadModal: React.FC<UploadModalProps> = ({
       {/* Modal Card */}
       <div className="relative z-10 bg-[#0B1930] border border-[#12D9F5]/40 rounded-2xl w-full max-w-2xl shadow-2xl p-6 sm:p-8 space-y-6 my-8 max-h-[90vh] overflow-y-auto text-white">
         
-        {/* Header */}
+        {/* Header with verified badge */}
         <div className="flex items-center justify-between border-b border-slate-800 pb-4">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-lg bg-[#1557E8]/20 border border-[#12D9F5]/40 flex items-center justify-center text-[#12D9F5]">
               <Upload className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-neo text-xl font-bold text-white">
-                Upload Learning Material
-              </h3>
+              <div className="flex items-center gap-2">
+                <h3 className="font-neo text-xl font-bold text-white">
+                  Upload Learning Material
+                </h3>
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#19DDB5]/15 border border-[#19DDB5]/40 text-[#19DDB5] text-[10px] font-mono font-bold uppercase">
+                  <ShieldCheck className="w-3 h-3" />
+                  {currentUser?.role === 'owner' ? 'Owner Verified' : 'Admin Verified'}
+                </span>
+              </div>
               <p className="text-xs text-slate-400 font-mono">
-                Share e-books, documents, diagrams, videos, podcasts &amp; code
+                Authenticated as <strong className="text-white">{currentUser?.name}</strong> ({currentUser?.email})
               </p>
             </div>
           </div>
@@ -333,13 +413,13 @@ export const UploadModal: React.FC<UploadModalProps> = ({
 
             <div className="space-y-1.5">
               <label className="text-xs font-['IBM_Plex_Mono'] text-slate-300 font-semibold uppercase tracking-wider">
-                Author / Contributor
+                Publisher / Author Name
               </label>
               <input
                 type="text"
                 value={authorName}
                 onChange={(e) => setAuthorName(e.target.value)}
-                placeholder="e.g., Alex Chen, Lead AI Researcher"
+                placeholder="e.g., Anand, Founder & Lead Architect"
                 className="w-full bg-[#061226] border border-slate-700/80 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#12D9F5] transition-colors"
               />
             </div>
@@ -375,22 +455,29 @@ export const UploadModal: React.FC<UploadModalProps> = ({
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-5 py-2.5 rounded-xl border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 text-xs font-semibold transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={isUploading}
-              className="btn-shimmer inline-flex items-center gap-2 bg-[#1557E8] hover:bg-[#168CFF] text-white text-xs font-semibold px-6 py-2.5 rounded-xl shadow-lg shadow-blue-700/30 transition-all disabled:opacity-50"
-            >
-              <Sparkles className="w-4 h-4" />
-              {isUploading ? 'Publishing...' : 'Publish to Learning Hub'}
-            </button>
+          <div className="flex items-center justify-between pt-4 border-t border-slate-800">
+            <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#19DDB5]" />
+              <span>Publishing as verified {currentUser?.role}</span>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-5 py-2.5 rounded-xl border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 text-xs font-semibold transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={isUploading}
+                className="btn-shimmer inline-flex items-center gap-2 bg-[#1557E8] hover:bg-[#168CFF] text-white text-xs font-semibold px-6 py-2.5 rounded-xl shadow-lg shadow-blue-700/30 transition-all disabled:opacity-50"
+              >
+                <Sparkles className="w-4 h-4" />
+                {isUploading ? 'Publishing...' : 'Publish to Vault (Owner/Admin)'}
+              </button>
+            </div>
           </div>
 
         </form>
