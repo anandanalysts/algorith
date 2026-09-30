@@ -3,17 +3,17 @@ import React from 'react';
 interface LogoProps {
   className?: string;
   size?: number;
-  showText?: boolean;
-  textClassName?: string;
+  showIcon?: boolean;
+  showSlogan?: boolean;
   sloganClassName?: string;
-  animate?: boolean;
+  wordmarkClassName?: string;
+  techBadgeClassName?: string;
 }
 
-export function AlgorithLogoIcon({ size = 36, className = "" }: { size?: number; className?: string }) {
-  const gradientId = "algorith-logo-grad-" + Math.random().toString(36).substr(2, 9);
-  const glowGradId = "algorith-glow-grad-" + Math.random().toString(36).substr(2, 9);
-  const cyanGradId = "algorith-cyan-grad-" + Math.random().toString(36).substr(2, 9);
-
+/**
+ * 3D Holographic Hexagon Icon
+ */
+export function AlgorithLogoIcon({ size = 34, className = "" }: { size?: number; className?: string }) {
   return (
     <svg 
       width={size} 
@@ -24,90 +24,138 @@ export function AlgorithLogoIcon({ size = 36, className = "" }: { size?: number;
       className={className}
     >
       <defs>
-        <linearGradient id={gradientId} x1="10" y1="90" x2="90" y2="10" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#1557E8" />
-          <stop offset="50%" stopColor="#168CFF" />
-          <stop offset="100%" stopColor="#12D9F5" />
-        </linearGradient>
-        
-        <linearGradient id={cyanGradId} x1="30" y1="20" x2="70" y2="80" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#12D9F5" />
-          <stop offset="100%" stopColor="#19DDB5" />
+        <linearGradient id="hexGrad" x1="12" y1="88" x2="88" y2="12" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#00F5D4" />
+          <stop offset="35%" stopColor="#12D9F5" />
+          <stop offset="70%" stopColor="#1557E8" />
+          <stop offset="100%" stopColor="#1E40AF" />
         </linearGradient>
 
-        <radialGradient id={glowGradId} cx="50" cy="50" r="45" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#12D9F5" stopOpacity="0.25" />
-          <stop offset="100%" stopColor="#061226" stopOpacity="0" />
+        <radialGradient id="centerBall" cx="44%" cy="40%" r="60%">
+          <stop offset="0%" stopColor="#70E4FF" />
+          <stop offset="30%" stopColor="#00A2FF" />
+          <stop offset="75%" stopColor="#0052D4" />
+          <stop offset="100%" stopColor="#002D80" />
         </radialGradient>
 
-        <filter id="neon-glow" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="3" result="blur" />
-          <feComposite in="SourceGraphic" in2="blur" operator="over" />
-        </filter>
+        <radialGradient id="emeraldBall" cx="42%" cy="38%" r="62%">
+          <stop offset="0%" stopColor="#80FFDB" />
+          <stop offset="30%" stopColor="#19DDB5" />
+          <stop offset="70%" stopColor="#00A876" />
+          <stop offset="100%" stopColor="#00543B" />
+        </radialGradient>
       </defs>
 
-      {/* Ambient background glow ring */}
-      <circle cx="50" cy="50" r="44" fill={`url(#${glowGradId})`} />
-      <circle cx="50" cy="50" r="44" stroke="#12D9F5" strokeWidth="1" strokeOpacity="0.2" strokeDasharray="3 3" />
-
-      {/* Left Strut of Architectural 'A' */}
-      <path 
-        d="M50 14L20 82H34L50 44L66 82H80L50 14Z" 
-        fill={`url(#${gradientId})`} 
-        fillOpacity="0.9"
-      />
-
-      {/* Cyber Inner Diamond & Neural Crossbar */}
-      <path 
-        d="M50 32L38 60H62L50 32Z" 
-        fill="#061226" 
-      />
-
-      {/* Glowing Algorithm Bridge Vector */}
-      <path 
-        d="M26 62L74 62" 
-        stroke={`url(#${cyanGradId})`} 
-        strokeWidth="3.5" 
+      {/* Hexagon Border */}
+      <path
+        d="M 45 6.2 Q 50 3.5 55 6.2 L 85.8 24.2 Q 90.5 27 90.5 32.4 L 90.5 67.6 Q 90.5 73 85.8 75.8 L 55 93.8 Q 50 96.5 45 93.8 L 14.2 75.8 Q 9.5 73 9.5 67.6 L 9.5 32.4 Q 9.5 27 14.2 24.2 Z"
+        stroke="url(#hexGrad)"
+        strokeWidth="4"
         strokeLinecap="round"
-        filter="url(#neon-glow)"
+        strokeLinejoin="round"
+        fill="#060D1A"
       />
 
-      {/* Neural Core Nodes */}
-      <circle cx="50" cy="14" r="4.5" fill="#12D9F5" stroke="#FFFFFF" strokeWidth="1.5" />
-      <circle cx="20" cy="82" r="4" fill="#1557E8" stroke="#12D9F5" strokeWidth="1.5" />
-      <circle cx="80" cy="82" r="4" fill="#12D9F5" stroke="#19DDB5" strokeWidth="1.5" />
-      <circle cx="50" cy="62" r="3" fill="#19DDB5" />
+      {/* Futuristic Internal Nodes */}
+      <circle cx="50" cy="48" r="8" fill="url(#centerBall)" />
+      <circle cx="28" cy="58" r="6.5" fill="url(#emeraldBall)" />
+      <circle cx="40" cy="68" r="6.5" fill="url(#emeraldBall)" />
+      <circle cx="68" cy="36" r="5" fill="#70E4FF" />
+      <circle cx="74" cy="54" r="5.5" fill="#12D9F5" />
     </svg>
   );
 }
 
-export function AlgorithLogo({ 
-  className = "", 
-  size = 38, 
-  showText = true,
-  textClassName = "",
-  sloganClassName = ""
+/**
+ * Exact ALGorith TECH Brand Lockup matching official brand specification
+ * - "AL" + angular "G" + "orith"
+ * - "[ TECH ]" pill badge
+ * - "THINK • BUILD • AUTOMATE • GROW"
+ */
+export function AlgorithBrandLockup({
+  showIcon = false,
+  showSlogan = true,
+  className = "",
+  wordmarkClassName = "text-2xl sm:text-3xl",
+  sloganClassName = "text-[9px] sm:text-[10px]",
+  techBadgeClassName = "text-[10px] sm:text-[11px] px-2 py-0.5"
 }: LogoProps) {
   return (
-    <div className={`flex items-center gap-3 select-none ${className}`}>
-      <div className="relative group/logo flex items-center justify-center">
-        <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-[#1557E8] to-[#12D9F5] opacity-30 blur-sm group-hover/logo:opacity-75 transition duration-300"></div>
-        <div className="relative w-10 h-10 rounded-lg bg-[#0B1930] border border-[#12D9F5]/40 flex items-center justify-center p-1 group-hover/logo:border-[#12D9F5] transition-colors">
-          <AlgorithLogoIcon size={size} />
+    <div className={`inline-flex flex-col select-none ${className}`}>
+      {/* Top Line: Icon + Wordmark + TECH Badge */}
+      <div className="flex items-center gap-2.5">
+        {showIcon && (
+          <div className="w-8 h-8 rounded-lg bg-[#0C172E] border border-[#12D9F5]/30 flex items-center justify-center p-0.5 shrink-0">
+            <AlgorithLogoIcon size={26} />
+          </div>
+        )}
+
+        <div className="flex items-center gap-2">
+          {/* Main Wordmark: AL + G + orith */}
+          <div className={`font-display font-bold text-white tracking-tight flex items-baseline leading-none ${wordmarkClassName}`}>
+            <span>AL</span>
+            <span className="font-neo font-extrabold tracking-normal">G</span>
+            <span>orith</span>
+          </div>
+
+          {/* TECH Badge */}
+          <div className={`font-mono font-bold uppercase text-[#12D9F5] bg-[#0A1A2E]/80 border border-[#12D9F5]/60 rounded-md tracking-wider flex items-center justify-center shadow-sm shadow-cyan-950/50 ${techBadgeClassName}`}>
+            TECH
+          </div>
         </div>
       </div>
 
-      {showText && (
-        <div className="flex flex-col">
-          <div className={`font-neo text-xl font-bold tracking-[0.06em] text-white leading-none flex items-baseline gap-1 ${textClassName}`}>
-            <span>ALG<span className="text-slate-100 font-semibold">orith</span></span>
-            <span className="font-['IBM_Plex_Mono'] text-[10px] font-semibold text-[#12D9F5] tracking-widest px-1 py-0.5 rounded bg-[#12D9F5]/10 border border-[#12D9F5]/30">TECH</span>
-          </div>
-          <div className={`font-['IBM_Plex_Mono'] text-[9px] tracking-[0.18em] text-slate-400 mt-1 uppercase font-medium ${sloganClassName}`}>
-            THINK • BUILD • AUTOMATE • GROW
-          </div>
+      {/* Bottom Line: Slogan */}
+      {showSlogan && (
+        <div className={`font-mono uppercase tracking-[0.22em] text-[#7A8B9E] font-medium mt-1 leading-none ${sloganClassName}`}>
+          THINK &bull; BUILD &bull; AUTOMATE &bull; GROW
         </div>
       )}
     </div>
   );
 }
+
+/**
+ * Default Logo Component (Used in Navigation & Footer)
+ */
+export function AlgorithLogo({
+  className = "",
+  size = 32,
+  showIcon = true,
+  showSlogan = true
+}: LogoProps) {
+  return (
+    <div className={`flex items-center gap-3 select-none ${className}`}>
+      {showIcon && (
+        <div className="relative group/icon flex items-center justify-center shrink-0">
+          <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-[#1557E8] to-[#12D9F5] opacity-25 group-hover/icon:opacity-60 transition duration-300 blur-[2px]" />
+          <div className="relative w-9 h-9 rounded-lg bg-[#0B1528] border border-[#12D9F5]/40 flex items-center justify-center p-1">
+            <AlgorithLogoIcon size={size} />
+          </div>
+        </div>
+      )}
+
+      <div className="flex flex-col">
+        <div className="flex items-center gap-2">
+          <span className="font-display text-xl sm:text-2xl font-bold tracking-tight text-white flex items-baseline leading-none">
+            <span>AL</span>
+            <span className="font-neo font-extrabold">G</span>
+            <span>orith</span>
+          </span>
+
+          <span className="font-mono text-[9px] font-bold text-[#12D9F5] uppercase px-1.5 py-0.5 rounded bg-[#0A1A2E] border border-[#12D9F5]/60 tracking-wider shadow-sm">
+            TECH
+          </span>
+        </div>
+
+        {showSlogan && (
+          <div className="font-mono text-[8.5px] sm:text-[9px] uppercase tracking-[0.2em] text-slate-400 font-medium mt-1 leading-none">
+            THINK &bull; BUILD &bull; AUTOMATE &bull; GROW
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export { AlgorithLogo as Logo };

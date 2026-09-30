@@ -11,7 +11,7 @@ export const SOLUTIONS: SolutionItem[] = [
   {
     id: 'grow-revenue',
     title: 'Grow Revenue',
-    icon: '🚀',
+    icon: 'rocket',
     problem: 'Stagnant sales pipelines, unoptimized checkout flows, and poor conversion tracking limit top-line business growth.',
     approach: 'We deploy high-conversion headless checkout engines, automated sales tracking, and real-time revenue analytics to accelerate inbound conversions.',
     relevantProducts: ['ALGorith Cart', 'ALGorith CRM', 'ALGorith Analytics']
@@ -19,7 +19,7 @@ export const SOLUTIONS: SolutionItem[] = [
   {
     id: 'automate-operations',
     title: 'Automate Operations',
-    icon: '⚡',
+    icon: 'zap',
     problem: 'Manual data entry, repetitive administrative tasks, and disconnected software systems create operational bottlenecks.',
     approach: 'We implement event-driven workflow automation, autonomous worker agents, and seamless enterprise system integrations.',
     relevantProducts: ['ALGorith Automation', 'ALGorith AI Agents', 'Founder OS']
@@ -27,7 +27,7 @@ export const SOLUTIONS: SolutionItem[] = [
   {
     id: 'manage-customers',
     title: 'Manage Customers',
-    icon: '🤝',
+    icon: 'users',
     problem: 'Scattered customer communications and lack of real-time lead context result in missed follow-ups and churned accounts.',
     approach: 'We provide context-aware relationship engines with continuous lead enrichment, sentiment scoring, and automated pipeline progression.',
     relevantProducts: ['ALGorith CRM', 'ALGorith Cowork']
@@ -35,7 +35,7 @@ export const SOLUTIONS: SolutionItem[] = [
   {
     id: 'scale-marketing',
     title: 'Scale Marketing',
-    icon: '📈',
+    icon: 'trending-up',
     problem: 'Fragmented marketing channels and manual social posting lead to low brand visibility and high customer acquisition costs.',
     approach: 'We deploy multi-channel brand orchestration, autonomous publishing workflows, and digital growth automation suites.',
     relevantProducts: ['ALGorith Social', 'Digital Growth Services']
@@ -43,7 +43,7 @@ export const SOLUTIONS: SolutionItem[] = [
   {
     id: 'understand-data',
     title: 'Understand Data',
-    icon: '📊',
+    icon: 'bar-chart',
     problem: 'Siloed spreadsheets and lack of clear dashboards prevent leadership from making fast, data-backed decisions.',
     approach: 'We build centralized predictive business intelligence dashboards, anomaly detection models, and unified data pipelines.',
     relevantProducts: ['ALGorith Analytics', 'ALGorith AI']
@@ -51,7 +51,7 @@ export const SOLUTIONS: SolutionItem[] = [
   {
     id: 'adopt-ai',
     title: 'Adopt AI',
-    icon: '🧠',
+    icon: 'cpu',
     problem: 'Uncertainty around AI implementation and lack of proprietary data integration lead to stalled AI initiatives.',
     approach: 'We architect enterprise-grade RAG frameworks, AI assistants, and secure semantic knowledge retrieval systems.',
     relevantProducts: ['ALGorith AI', 'AI & Automation Consulting']
@@ -59,7 +59,7 @@ export const SOLUTIONS: SolutionItem[] = [
   {
     id: 'build-digital-products',
     title: 'Build Digital Products',
-    icon: '💻',
+    icon: 'code',
     problem: 'Slow development cycles and rigid legacy codebases prevent businesses from launching modern web apps and SaaS platforms.',
     approach: 'We engineer high-performance web applications, robust APIs, and production-grade MVPs with rigorous software standards.',
     relevantProducts: ['Founder OS', 'Software Development Services']
@@ -79,7 +79,7 @@ export const SERVICES: ServiceItem[] = [
   {
     id: 'ai-automation',
     title: 'AI & Automation',
-    icon: '⚡',
+    icon: 'zap',
     problem: 'Manual data entry and repetitive operational bottlenecks drain team productivity and slow down business growth.',
     solution: 'Deploy autonomous AI agents, workflow automation pipelines, and intelligent AI integrations connecting your core software.',
     businessOutcome: '70% reduction in manual overhead and 24/7 autonomous process execution.'
@@ -87,7 +87,7 @@ export const SERVICES: ServiceItem[] = [
   {
     id: 'software-dev',
     title: 'Software Development',
-    icon: '💻',
+    icon: 'code',
     problem: 'Rigid legacy tools and slow development cycles prevent businesses from shipping high-performance digital products.',
     solution: 'Build robust web applications, enterprise SaaS platforms, custom business software, and scalable APIs with engineering rigor.',
     businessOutcome: 'Accelerated time-to-market and secure, resilient digital products built to scale.'
@@ -95,7 +95,7 @@ export const SERVICES: ServiceItem[] = [
   {
     id: 'data-analytics',
     title: 'Data & Analytics',
-    icon: '📊',
+    icon: 'bar-chart',
     problem: 'Siloed data prevents executive teams from gaining real-time visibility into revenue, customer behavior, and operational health.',
     solution: 'Implement centralized business intelligence dashboards, predictive analytics models, and decision intelligence pipelines.',
     businessOutcome: 'Instant, data-backed strategic decisions and proactive anomaly detection.'
@@ -103,7 +103,7 @@ export const SERVICES: ServiceItem[] = [
   {
     id: 'digital-transformation',
     title: 'Digital Transformation',
-    icon: '🔄',
+    icon: 'refresh-cw',
     problem: 'Outdated legacy systems and disconnected spreadsheets create operational drag and high maintenance friction.',
     solution: 'Comprehensive process digitization, legacy system modernization, and seamless enterprise system integration.',
     businessOutcome: 'Future-proofed operational agility and streamlined cross-department workflows.'
@@ -111,7 +111,7 @@ export const SERVICES: ServiceItem[] = [
   {
     id: 'digital-growth',
     title: 'Digital Growth',
-    icon: '📈',
+    icon: 'trending-up',
     problem: 'Low digital visibility and fragmented marketing channels result in high customer acquisition costs and stagnant growth.',
     solution: 'Strategic digital marketing automation, multi-channel brand orchestration, and high-conversion e-commerce solutions.',
     businessOutcome: 'Scalable customer acquisition pipelines and heightened brand authority.'
@@ -119,7 +119,7 @@ export const SERVICES: ServiceItem[] = [
   {
     id: 'technology-consulting',
     title: 'Technology Consulting',
-    icon: '🏢',
+    icon: 'building',
     problem: 'Uncertainty around AI adoption, tech stack selection, and automation strategy leads to wasted R&D capital.',
     solution: 'Expert advisory on AI adoption, technology strategy, product roadmap development, and workflow automation roadmaps.',
     businessOutcome: 'Clear technology roadmap, optimized R&D spend, and competitive market positioning.'
@@ -381,37 +381,37 @@ export interface IndustryItem {
 
 export const INDUSTRIES: IndustryItem[] = [
   {
-    icon: '🚀',
+    icon: 'rocket',
     title: 'Startups',
     desc: 'Rapid MVP execution, scalable initial architectures, and AI feature integration to accelerate market validation.',
     focus: ['Rapid MVP Build', 'Zero-to-One Architecture', 'AI Prototype Sprints']
   },
   {
-    icon: '🏢',
+    icon: 'building',
     title: 'SMEs & Scaleups',
     desc: 'Process automation, CRM integration, and operational efficiency upgrades designed for fast growth.',
     focus: ['Legacy Modernization', 'Workflow Automation', 'Executive Dashboards']
   },
   {
-    icon: '🛍️',
+    icon: 'shopping-bag',
     title: 'E-commerce',
     desc: 'Inventory pipeline automation, customer AI support agents, and predictive demand analytics.',
     focus: ['Inventory Automation', 'AI Customer Care', 'Checkout Conversion']
   },
   {
-    icon: '⚖️',
+    icon: 'scale',
     title: 'Professional Services',
     desc: 'Document automation, client portals, and workflow orchestration for law firms, accounting, and consulting.',
     focus: ['Document Parsing', 'Secure Client Portals', 'Automated Billing']
   },
   {
-    icon: '🚚',
+    icon: 'truck',
     title: 'Operations & Logistics',
     desc: 'Real-time telemetry tracking, automated dispatch orchestration, and warehouse throughput optimization.',
     focus: ['Dispatch Orchestration', 'Fleet Telemetry', 'Supply Chain APIs']
   },
   {
-    icon: '🌐',
+    icon: 'globe',
     title: 'Digital Businesses',
     desc: 'High-concurrency SaaS platforms, API infrastructure, and real-time subscription intelligence.',
     focus: ['Multi-tenant SaaS', 'API Microservices', 'Autonomous Billing']
